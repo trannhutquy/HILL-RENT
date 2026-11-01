@@ -1,0 +1,17 @@
+{
+  "name": "Tính tiền trọ",
+  "short_name": "Tiền trọ",
+  "description": "Chia tiền trọ và chi tiêu chung",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f4f7ff",
+  "theme_color": "#6c5ce7",
+  "lang": "vi",
+  "icons": [
+    {"src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any"},
+    {"src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"},
+    {"src": "icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+  ]
+}

@@ -1,0 +1,33 @@
+BẢN NHIỀU PHÒNG - CÁCH CÀI
+
+1) Apps Script (trong Sheet): dán Code.gs mới thay toàn bộ code cũ.
+   Triển khai > Quản lý bản triển khai > Chỉnh sửa > Phiên bản mới (giữ nguyên link /exec cũ). Cấp quyền nếu được hỏi.
+   Không còn KEY chung. Mỗi nhóm có một mã phòng riêng.
+
+2) Người đang dùng dữ liệu cũ (1 nhóm): chọn hàm chuyenDuLieuCu > Chạy (MỘT lần).
+   Mã phòng của nhóm hiện ở Thực thi (log) và ở tab Phong, ô A2.
+   Dữ liệu, nhắc hẹn, máy nhận thông báo cũ đều được gán vào phòng đó.
+
+3) App: đưa thư mục lên hosting.
+   Mẹo: dán link /exec của bạn vào DEFAULT.url trong index.html để người mới khỏi nhập link.
+   - Máy đã có dữ liệu: Cài đặt > nhập link /exec + mã phòng > Vào phòng.
+   - Nhóm mới: Cài đặt > Tạo phòng mới > bấm Mời (hiện mã 6 số, hiệu lực 15 phút) > gửi mã/link cho bạn cùng trọ.
+   - Người kia: Cài đặt > nhập mã 6 số > Vào phòng (hoặc mở link mời).
+
+4) Mỗi máy: Cài đặt > Bật thông báo (một lần).
+
+Mã 6 số chỉ để vào phòng, hết hạn sau 15 phút, hệ thống chặn nếu thử sai quá 30 lần/phút.
+Mã phòng dài (từ chuyenDuLieuCu) vẫn dùng để vào phòng được, nên cất kỹ.
+Lưu ý: ai biết link /exec đều tạo được phòng mới; chỉ ai biết mã phòng mới xem được phòng đó. Đừng đăng mã phòng công khai.
+
+
+F. ĐÃ TRẢ VÀ CHỐT KỲ (cần dán Code.gs mới + triển khai phiên bản mới)
+- Tổng quan > "Ghi đã chuyển": ghi khoản tiền đã trả, số nợ giảm ngay.
+- Tổng quan > "Chốt kỳ": lưu kỳ hiện tại vào lịch sử (tab LichSu), mở kỳ mới trống; số nợ chưa trả tự chuyển sang kỳ mới.
+- Xem lại kỳ cũ ở thẻ "Các kỳ đã chốt" trong Tổng quan.
+
+G. LỊCH TRỰC NHẬT (cần dán Code.gs mới + triển khai phiên bản mới)
+- Tab "Trực nhật": thêm việc (đổ rác, lau nhà...), chọn lặp hằng ngày/tuần/2 tuần, người bắt đầu và giờ nhắc.
+- Hai người luân phiên theo chu kỳ. "Xong" ghi nhận, "Người kia làm thay" tính cho người kia, "Đổi lượt" đảo thứ tự.
+- Khi tới lượt (đúng ngày bắt đầu chu kỳ, đúng giờ nhắc), thông báo gửi tới cả hai máy kèm tên người trực.
+- Dữ liệu ở tab TrucNhat trong Sheet (tự tạo). Bộ hẹn giờ taoBoHen sẵn có đã đủ, không cần tạo thêm.
