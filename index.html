@@ -210,13 +210,14 @@ input:focus,select:focus{background:var(--g1)}
 
 <section class="v on" id="v-home">
 <div class="card hero" id="hero"></div>
+<div class="card" id="scard"><div class="ch"><b>Thống kê</b><span class="hint" id="savg" style="margin:0"></span></div><div id="slist"></div></div>
 <div class="card"><div class="ch"><b>Gần đây</b><button class="g" style="padding:6px 12px;font-size:13px" onclick="go('chi')">Xem tất cả</button></div><div id="recent"></div></div>
 <div class="card" id="tcard" hidden><div class="ch"><b>Trực nhật</b><button class="g" style="padding:6px 12px;font-size:13px" onclick="go('truc')">Mở</button></div><div id="tlist"></div></div>
 <div class="card" id="hcard" hidden><div class="ch"><b>Các kỳ đã chốt</b></div><div id="hlist"></div></div>
 </section>
 
 <section class="v" id="v-chi">
-<div class="card"><div class="ch"><b>Danh sách chi</b><span id="cnt" class="hint" style="margin:0"></span></div><input id="q" type="search" placeholder="Tìm khoản chi, ghi chú, người chi" style="margin:4px 0 4px"><div id="list"></div></div>
+<div class="card"><div class="ch"><b>Danh sách chi</b><span id="cnt" class="hint" style="margin:0"></span><button class="g" id="shcur" style="padding:6px 12px;font-size:13px;flex:none">Chia sẻ</button></div><input id="q" type="search" placeholder="Tìm khoản chi, ghi chú, người chi" style="margin:4px 0 4px"><div id="list"></div></div>
 </section>
 
 <section class="v" id="v-truc">
@@ -278,6 +279,8 @@ input:focus,select:focus{background:var(--g1)}
 
 <div id="sheet"><div class="card">
 <b id="ft">Thêm khoản chi</b>
+<div id="quick" style="display:flex;gap:8px;overflow-x:auto;padding:2px 0 8px;-webkit-overflow-scrolling:touch"></div>
+<div class="hint" id="qhint" style="margin:-4px 0 8px"></div>
 <div class="row">
 <div style="flex:2 1 200px"><label>Nội dung</label><input id="name" placeholder="VD: Tiền điện"></div>
 <div><label>Số tiền (đ)</label><input id="total" type="number" inputmode="numeric" min="0"></div>
@@ -319,7 +322,27 @@ function rfill(){const t=$('rty').value;$('rvm').hidden=t=='once';$('rvd').hidde
  $('rvl').textContent=t=='month'?'Ngày trong tháng':t=='week'?'Thứ':'Ngày';
  if(t!='once')$('rvm').innerHTML=t=='month'?Array.from({length:31},(_,i)=>`<option value="${i+1}">Ngày ${i+1}</option>`).join(''):WD.map((w,i)=>`<option value="${i}">${w}</option>`).join('')}
 function rrender(){const L=(S.rem||[]).filter(r=>r.on!==0);$('rcnt').textContent=L.length?L.length+' lịch':'';
- $('rlist').innerHTML=L.map(r=>`<div class="it" style="--c:var(--a)"><div class="m"><b>${String(r.title).replace(/[&<>"]/g,c=>'&#'+c.charCodeAt(0)+';')}</b><span>${r.type=='month'?'Ngày '+r.val+' hằng tháng':r.type=='week'?WD[r.val]+' hằng tuần':String(r.val).split('-').reverse().join('/')} · ${r.time}${r.bal?' · kèm số tiền':''}</span></div><button class="x" onclick="rdel(${r.id})">✕</button></div>`).join('')}
+ $('rlist').innerHTML=L.map(r=>`<div class="it" style="--c:var(--a)"><div class="m" style="cursor:pointer" onclick="redit(${r.id})"><b>${String(r.title).replace(/[&<>"]/g,c=>'&#'+c.charCodeAt(0)+';')}</b><span>${r.type=='month'?'Ngày '+r.val+' hằng tháng':r.type=='week'?WD[r.val]+' hằng tuần':String(r.val).split('-').reverse().join('/')} · ${r.time}${r.bal?' · kèm số tiền':''}</span></div>${r.type=='once'?`<button class="x" title="Hoãn 1 ngày" onclick="rsnooze(${r.id})">⏰</button>`:''}<button class="x" title="Sửa" onclick="redit(${r.id})">✎</button><button class="x" title="Xoá" onclick="rdel(${r.id})">✕</button></div>`).join('')}
+const remVal=(ty,val)=>ty=='once'?`<input id="edv" type="date" value="${esc(val||'')}">`
+ :ty=='week'?`<select id="edv">${WD.map((w,i)=>`<option value="${i}"${+val===i?' selected':''}>${w}</option>`).join('')}</select>`
+ :`<select id="edv">${Array.from({length:31},(_,i)=>`<option value="${i+1}"${+val===i+1?' selected':''}>Ngày ${i+1}</option>`).join('')}</select>`;
+function redit(id){const r=(S.rem||[]).find(x=>x.id==id);if(!r)return;
+ openMini('Sửa nhắc hẹn',`<label>Nội dung</label><input id="edt" value="${esc(r.title)}">
+ <div class="row"><div><label>Lặp</label><select id="edty"><option value="month"${r.type=='month'?' selected':''}>Hằng tháng</option><option value="week"${r.type=='week'?' selected':''}>Hằng tuần</option><option value="once"${r.type=='once'?' selected':''}>Một lần</option></select></div>
+ <div><label id="edvl">${r.type=='month'?'Ngày trong tháng':r.type=='week'?'Thứ':'Ngày'}</label><span id="edvw">${remVal(r.type,r.val)}</span></div>
+ <div><label>Giờ</label><input id="edtm" type="time" value="${esc(r.time)}"></div></div>
+ <label style="display:flex;gap:8px;align-items:center;margin-top:12px;font-size:14px;color:var(--tx)"><input id="edbal" type="checkbox"${r.bal?' checked':''} style="width:auto;padding:0"> Kèm số tiền cần chuyển</label>`,'Lưu',()=>{
+  const t=$('edt').value.trim(),t2=$('edty').value,v=$('edv').value;
+  if(!t||!v){toast('Nhập nội dung và ngày nhắc');return false}
+  const nr={id:r.id,title:t,type:t2,val:v,time:$('edtm').value||'08:00',bal:$('edbal').checked?1:0,on:1};
+  S.rem=(S.rem||[]).map(x=>x.id==id?nr:x);rrender();
+  sync('remDel',{id});sync('remSave',{rem:nr});toast('Đã sửa nhắc hẹn');});
+ $('edty').onchange=()=>{const t2=$('edty').value;$('edvl').textContent=t2=='month'?'Ngày trong tháng':t2=='week'?'Thứ':'Ngày';$('edvw').innerHTML=remVal(t2,t2=='once'?isoD():r.val)}}
+function rsnooze(id){const r=(S.rem||[]).find(x=>x.id==id);if(!r)return;
+ const base=(r.val&&r.val>=isoD())?r.val:isoD(),d=new Date(base+'T12:00:00');d.setDate(d.getDate()+1);
+ const nd=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+ const nr={...r,val:nd,on:1};S.rem=S.rem.map(x=>x.id==id?nr:x);rrender();
+ sync('remDel',{id});sync('remSave',{rem:nr});toast('Đã hoãn tới '+dmy(nd))}
 function rdel(id){S.rem=(S.rem||[]).filter(r=>r.id!=id);rrender();sync('remDel',{id})}
 $('rty').onchange=rfill;rfill();
 $('radd').onclick=()=>{const t=$('rty').value,v=t=='once'?$('rvd').value:$('rvm').value,ti=$('rt').value.trim();
@@ -388,7 +411,12 @@ function renderHist(){const H=S.hist||[];$('hcard').hidden=!H.length;
 async function viewHist(pid){const x=(S.hist||[]).find(h=>h.pid===pid);if(!x)return;
  openMini(x.label,'<div class="hint">Đang tải…</div>',null,null);
  try{const r=await call('periodItems',{pid});if(r.error)throw new Error(r.error);
-  $('mb').innerHTML=r.detail.items.map(it=>`<div class="it" style="--c:${it.payer?'var(--b)':'var(--a)'}"><div class="m" style="cursor:default"><b>${esc(it.name||'(chưa đặt tên)')}</b><span>${it.mode=='pay'?esc(x.names[it.payer])+' → '+esc(x.names[1-it.payer]):esc(x.names[it.payer])+' chi'}${it.date?' · '+it.date.split('-').reverse().join('/'):''}</span></div><div class="amt">${fmt(it.total)}<span>${it.mode=='pay'?'đã chuyển':''}</span></div></div>`).join('')||'<div class="hint">Không có dữ liệu.</div>'}
+  const its=r.detail.items;
+  $('mb').innerHTML=(its.map(it=>`<div class="it" style="--c:${it.payer?'var(--b)':'var(--a)'}"><div class="m" style="cursor:default"><b>${esc(it.name||'(chưa đặt tên)')}</b><span>${it.mode=='pay'?esc(x.names[it.payer])+' → '+esc(x.names[1-it.payer]):esc(x.names[it.payer])+' chi'}${it.date?' · '+it.date.split('-').reverse().join('/'):''}</span></div><div class="amt">${fmt(it.total)}<span>${it.mode=='pay'?'đã chuyển':''}</span></div></div>`).join('')||'<div class="hint">Không có dữ liệu.</div>')+
+  '<div class="row" style="margin-top:10px"><button id="hs1">Chia sẻ</button><button class="g" id="hs2">Sao chép CSV</button></div>';
+  $('hs1').onclick=()=>shareText(periodText(x.label,x.names,its,x.o));
+  $('hs2').onclick=()=>copyText(csvText(its,x.names),'Đã sao chép CSV');
+ }
  catch(e){$('mb').innerHTML='<div class="hint">'+esc(e.message)+'</div>'}}
 const dn=s=>{const p=s.split('-');return Date.UTC(+p[0],+p[1]-1,+p[2])/864e5};
 const dstr=n=>new Date(n*864e5).toISOString().slice(0,10);
@@ -447,7 +475,7 @@ function render(){
  $('list').innerHTML=html||(S.items.length?'<div class="empty">Không tìm thấy khoản nào.</div>':'<div class="empty">Chưa có khoản chi nào.<br>Bấm nút <b>+ Thêm khoản chi</b> để bắt đầu.</div>');
  L.forEach(it=>shown.add(it.id));
  $('cnt').textContent=q?L.length+'/'+S.items.length+' khoản':S.items.length+' khoản';
- recent();renderHist();rrender();renderChores();preview()}
+ recent();renderHist();rrender();renderChores();preview();renderStats()}
 function vis(){const m=$('mode').value;document.querySelectorAll('#modes button').forEach(b=>b.classList.toggle('on',b.dataset.m==m));$('vbox').hidden=!(m=='pct'||m=='fixed');$('vl').textContent=m=='pct'?'% người kia chịu':'Người kia chịu (đ)'}
 function cur(){return{name:$('name').value.trim(),total:+$('total').value||0,payer:+$('payer').value,mode:$('mode').value,val:+$('val').value||0,date:$('date').value,note:$('note').value.trim()}}
 function preview(){const c=cur();$('prev').textContent=c.total?`${fmt(c.total)} → ${S.names[1-c.payer]} nợ ${fmt(share(c))}`:''}
@@ -457,10 +485,10 @@ function add(){const c=cur();if(!c.total){$('total').focus();$('prev').textConte
  let it;if(editing){it=S.items.find(x=>x.id==editing);Object.assign(it,c)}else{it={id:Date.now(),...c};S.items.push(it)}
  sync('upsert',{item:it});
  $('payer').dataset.v=c.payer;clear();save();render();closeSheet();if(navigator.vibrate)navigator.vibrate(12);toast(msg)}
-function clear(){editing=null;['name','total','val','note'].forEach(i=>$(i).value='');$('mode').value='equal';$('save').textContent='Thêm';$('ft').textContent='Thêm khoản chi';$('cancel').hidden=true;vis()}
+function clear(){editing=null;['name','total','val','note'].forEach(i=>$(i).value='');$('mode').value='equal';$('save').textContent='Thêm';$('ft').textContent='Thêm khoản chi';$('cancel').hidden=true;$('quick').style.display='';$('qhint').textContent='';vis()}
 function edit(id){const it=S.items.find(x=>x.id==id);editing=id;
  $('name').value=it.name;$('total').value=it.total;$('mode').value=it.mode;$('val').value=it.val||'';$('date').value=it.date;$('note').value=it.note;
- $('payer').value=it.payer;vis();$('save').textContent='Lưu';$('ft').textContent='Sửa khoản chi';$('cancel').hidden=false;preview();openSheet()}
+ $('payer').value=it.payer;$('quick').style.display='none';$('qhint').textContent='';vis();$('save').textContent='Lưu';$('ft').textContent='Sửa khoản chi';$('cancel').hidden=false;preview();openSheet()}
 function del(id){const el=document.querySelector('#list [data-id="'+id+'"]');
  if(el&&!calm()){el.style.maxHeight=el.offsetHeight+'px';void el.offsetHeight;el.classList.add('out');setTimeout(()=>delNow(id),260)}else delNow(id)}
 function delNow(id){const it=S.items.find(x=>x.id==id);if(!it)return;
@@ -474,7 +502,67 @@ $('month').oninput=e=>{S.month=e.target.value;save();render();pushSet()};
 ['n0','n1'].forEach((id,i)=>$(id).oninput=e=>{S.names[i]=e.target.value||('Người '+(i+1));save();pushSet();const p=$('payer').value;render();$('payer').value=p});
 $('reset').onclick=()=>{if(confirm('Xoá toàn bộ khoản chi?')){S.items=[];save();clear();render();sync('bulk',{items:[],settings:{month:S.month,names:S.names}})}};
 
-vis();render();
+// ---- Nhập nhanh khoản định kỳ ----
+const QUICK=['Tiền trọ','Tiền điện','Tiền nước','Internet','Rác'];
+function quickRender(){$('quick').innerHTML=QUICK.map(n=>`<button class="g" data-q="${esc(n)}" style="flex:none;padding:6px 12px;font-size:13px;border-radius:99px">${esc(n)}</button>`).join('');
+ $('quick').querySelectorAll('button').forEach(b=>b.onclick=()=>quickFill(b.dataset.q))}
+function quickFill(name){
+ const L=S.items.filter(x=>x.mode!=='pay'&&norm(x.name).trim()===norm(name)).sort((a,b)=>String(b.date||'').localeCompare(String(a.date||''))||b.id-a.id);
+ const last=L[0];$('name').value=name;if(!$('date').value)$('date').value=isoD();
+ if(last){
+  $('payer').value=last.payer;$('mode').value=last.mode;$('val').value=last.val||'';$('total').value=Math.round(+last.total||0);
+  const avg=L.slice(0,3).reduce((s,x)=>s+(+x.total||0),0)/Math.min(3,L.length);
+  const how={equal:'chia đều',pct:'theo % '+last.val,fixed:'cố định '+fmt(last.val),full:'người kia trả hết',none:'tự chịu'}[last.mode]||'';
+  $('qhint').textContent='Lần trước '+fmt(last.total)+(how?' · '+how:'')+(L.length>1?' · TB 3 lần '+fmt(avg):'')+' — sửa số tiền nếu khác';
+ }else{$('mode').value='equal';$('val').value='';$('total').value='';$('qhint').textContent='Chưa có khoản "'+name+'" — nhập số tiền';$('total').focus()}
+ vis();preview();
+}
+// ---- Thống kê ----
+function renderStats(){
+ const H=S.hist||[],cur=S.items.filter(x=>x.mode!=='pay'),curTotal=cur.reduce((s,x)=>s+(+x.total||0),0);
+ const rows=[{label:S.month||'Kỳ này',total:curTotal,cur:true}].concat(H.slice(0,2).map(h=>({label:h.label,total:+h.total||0})));
+ const has=rows.some(r=>r.total>0);$('scard').hidden=!has;if(!has)return;
+ const max=Math.max(1,...rows.map(r=>r.total)),prev=H[0]?+H[0].total||0:0,delta=(curTotal>0&&prev>0)?(curTotal-prev)/prev*100:0;
+ const avg=rows.reduce((s,r)=>s+r.total,0)/rows.length,top=cur.slice().sort((a,b)=>(+b.total||0)-(+a.total||0)).slice(0,3);
+ $('slist').innerHTML=rows.map(r=>`<div style="display:flex;align-items:center;gap:8px;margin:6px 0"><span style="flex:0 0 86px;font-size:12px;color:var(--mut);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(r.label)}</span><span style="flex:1;height:9px;border-radius:99px;background:var(--gl);overflow:hidden"><i style="display:block;height:100%;border-radius:99px;width:${(r.total/max*100).toFixed(1)}%;background:${r.cur?'linear-gradient(90deg,#6c5ce7,#00b894)':'var(--a)'}"></i></span><b style="font-size:12px;white-space:nowrap">${fmt(r.total)}</b></div>`).join('')
+  +(Math.abs(delta)>=1?`<div class="hint" style="margin-top:4px">Kỳ này ${delta>0?'tăng':'giảm'} <b>${Math.abs(delta).toFixed(0)}%</b> so với kỳ trước</div>`:'')
+  +(top.length?`<div class="hint" style="margin-top:4px">Tốn nhất kỳ này: ${top.map(x=>esc(x.name||'?')+' '+fmt(x.total)).join(' · ')}</div>`:'')
+  +`<div class="hint" style="margin-top:4px">Trung bình mỗi người/kỳ: <b>${fmt(avg/2)}</b></div>`;
+ $('savg').textContent=H.length?H.length+' kỳ đã chốt':'';
+}
+// ---- Chia sẻ / CSV ----
+const csvCell=c=>/[",\n]/.test(String(c))?'"'+String(c).replace(/"/g,'""')+'"':String(c);
+function csvText(items,names){
+ const rows=[['Ngày','Nội dung','Số tiền','Người chi','Cách chia','Giá trị','Người kia chịu','Ghi chú']];
+ items.forEach(it=>rows.push([it.date||'',it.name||'',Math.round(+it.total||0),names[it.payer]||'',it.mode||'',it.val||'',Math.round(share(it)),it.note||'']));
+ return rows.map(r=>r.map(csvCell).join(',')).join('\n');
+}
+function periodText(label,names,items,o){
+ const total=items.filter(x=>x.mode!=='pay').reduce((s,x)=>s+(+x.total||0),0),net=o[1]-o[0];
+ const lines=items.filter(x=>x.mode!=='pay').map(x=>'- '+x.name+' ('+names[x.payer]+' chi): '+fmt(x.total));
+ const pays=items.filter(x=>x.mode==='pay').map(x=>'- Thanh toán: '+names[x.payer]+' → '+names[1-x.payer]+' '+fmt(x.total));
+ return ['Tính tiền trọ — '+label,'Tổng chi: '+fmt(total),names[0]+': '+fmt(o[0])+' · '+names[1]+': '+fmt(o[1]),
+  (Math.abs(net)<1?'Hai bên hoà vốn':names[net>0?1:0]+' cần chuyển '+names[net>0?0:1]+' '+fmt(Math.abs(net)))].concat(lines,pays).join('\n');
+}
+async function copyText(t,ok){
+ try{await navigator.clipboard.writeText(t);toast(ok||'Đã sao chép');return}catch(e){}
+ try{const ta=document.createElement('textarea');ta.value=t;ta.style.cssText='position:fixed;top:0;left:0;opacity:0';document.body.appendChild(ta);ta.select();const r=document.execCommand('copy');ta.remove();if(r){toast(ok||'Đã sao chép');return}}catch(e){}
+ openMini('Sao chép','');
+ $('mb').innerHTML='<div class="hint">Trình duyệt chặn sao chép tự động. Nội dung đã được chọn sẵn — giữ để Copy hoặc bấm Ctrl+C.</div><textarea id="ctxt" readonly rows="9" style="font-family:ui-monospace,Consolas,monospace;font-size:12px;width:100%">'+esc(t)+'</textarea>';
+ const a=$('ctxt');a.focus();a.select();
+}
+async function shareText(text){if(navigator.share){try{await navigator.share({title:'Tính tiền trọ',text});return}catch(e){if(e.name==='AbortError')return}}copyText(text,'Đã sao chép tóm tắt')}
+function shareCur(){
+ if(!S.items.length){toast('Kỳ này chưa có khoản nào');return}
+ const o=calc();
+ openMini('Chia sẻ kỳ '+(S.month||''),'');
+ $('mb').innerHTML='<button id="sm1" style="width:100%">Chia sẻ tóm tắt</button><button class="g" id="sm2" style="width:100%;margin-top:8px">Sao chép CSV</button><div class="hint" style="margin-top:8px">Tóm tắt gồm tổng chi, mỗi người phải trả, ai chuyển cho ai và danh sách khoản.</div>';
+ $('sm1').onclick=()=>{closeMini();shareText(periodText(S.month||'Kỳ này',S.names,S.items,o))};
+ $('sm2').onclick=()=>{closeMini();copyText(csvText(S.items,S.names),'Đã sao chép CSV')};
+}
+$('shcur').onclick=shareCur;
+
+quickRender();vis();render();
 const DEFAULT={url:'https://script.google.com/macros/s/AKfycbz6-jwOrGk5QibKkAhi_Vp4FBMPJPCbJNDIewQwDlR8msamryfUWPcXfXgETFZFtK7qcw/exec',room:''}; // có thể dán sẵn link /exec và mã vào đây để mọi máy tự kết nối
 let cfg={...DEFAULT};try{Object.assign(cfg,JSON.parse(localStorage.getItem('tttcfg')||'{}'))}catch(e){}
 const saveCfg=()=>{try{localStorage.setItem('tttcfg',JSON.stringify({url:cfg.url,room:cfg.room}))}catch(e){}};
@@ -614,7 +702,7 @@ $('inv').onclick=async()=>{let r;try{r=await call('invite',{});if(r.error)throw 
  try{await navigator.clipboard.writeText(text);toast('Đã sao chép lời mời')}catch(e){}};
 $('rc').onclick=async()=>{if(!cfg.room)return;try{await navigator.clipboard.writeText(cfg.room);toast('Đã sao chép mã phòng')}catch(e){toast(cfg.room)}};
 // ---- Phiên bản: hiển thị + kiểm tra bản mới trên GitHub Pages ----
-const APP_V='ttt-v28',APP_DATE='10/11/2026',vNum=s=>+((String(s).match(/\d+/)||[0])[0]),vShow=()=>{$('vcur').textContent=APP_V.replace('ttt-','')+' · '+APP_DATE};
+const APP_V='ttt-v29',APP_DATE='10/11/2026',vNum=s=>+((String(s).match(/\d+/)||[0])[0]),vShow=()=>{$('vcur').textContent=APP_V.replace('ttt-','')+' · '+APP_DATE};
 let vLast=0;
 async function checkVer(auto){
  if(auto&&Date.now()-vLast<3e5)return;vLast=Date.now();
