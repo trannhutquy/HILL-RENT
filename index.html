@@ -257,7 +257,7 @@ input:focus,select:focus{background:var(--g1)}
 </div></div>
 <div class="card" id="cfg"><b>Phòng</b>
 <div id="roomOn" hidden>
-<div class="hint">Đã kết nối. Bấm Mời để lấy mã 6 số cho bạn cùng trọ.</div><div id="rc" hidden></div>
+<div class="hint">Mã phòng (bấm để sao chép) — dùng để vào phòng trên máy khác:</div><div id="rc" title="Bấm để sao chép" style="font-family:ui-monospace,Consolas,monospace;font-weight:700;font-size:13px;letter-spacing:.06em;padding:10px 12px;border-radius:12px;background:var(--fld);color:var(--tx);cursor:pointer;word-break:break-all;margin:4px 0 10px"></div><div class="hint">Bấm Mời để lấy mã 6 số cho bạn cùng trọ.</div>
 <div id="invbox" hidden style="text-align:center;margin:14px 0"><div id="ic" style="font-size:38px;font-weight:800;letter-spacing:.22em"></div><div class="hint" id="iexp"></div></div>
 <div class="row"><button id="inv">Mời người khác</button><button class="g" id="notif">Bật thông báo</button><button class="g" id="leave">Rời phòng</button></div></div></div>
 <button class="g" id="reset" style="width:100%">Xoá hết khoản chi</button>
@@ -306,7 +306,7 @@ const WD=['Chủ nhật','Thứ 2','Thứ 3','Thứ 4','Thứ 5','Thứ 6','Th�
 function rfill(){const t=$('rty').value;$('rvm').hidden=t=='once';$('rvd').hidden=t!='once';
  $('rvl').textContent=t=='month'?'Ngày trong tháng':t=='week'?'Thứ':'Ngày';
  if(t!='once')$('rvm').innerHTML=t=='month'?Array.from({length:31},(_,i)=>`<option value="${i+1}">Ngày ${i+1}</option>`).join(''):WD.map((w,i)=>`<option value="${i}">${w}</option>`).join('')}
-function rrender(){const L=S.rem||[];$('rcnt').textContent=L.length?L.length+' lịch':'';
+function rrender(){const L=(S.rem||[]).filter(r=>r.on!==0);$('rcnt').textContent=L.length?L.length+' lịch':'';
  $('rlist').innerHTML=L.map(r=>`<div class="it" style="--c:var(--a)"><div class="m"><b>${String(r.title).replace(/[&<>"]/g,c=>'&#'+c.charCodeAt(0)+';')}</b><span>${r.type=='month'?'Ngày '+r.val+' hằng tháng':r.type=='week'?WD[r.val]+' hằng tuần':String(r.val).split('-').reverse().join('/')} · ${r.time}${r.bal?' · kèm số tiền':''}</span></div><button class="x" onclick="rdel(${r.id})">✕</button></div>`).join('')}
 function rdel(id){S.rem=(S.rem||[]).filter(r=>r.id!=id);rrender();sync('remDel',{id})}
 $('rty').onchange=rfill;rfill();
@@ -396,7 +396,7 @@ function choreDone(id,by,key){const c=(S.chores||[]).find(x=>x.id==id);if(!c)ret
  if(c.doneKey===key&&c.doneBy>=0)c.cnt[c.doneBy]=Math.max(0,c.cnt[c.doneBy]-1);
  if(by>=0){c.doneKey=key;c.doneBy=by;c.cnt[by]++}else{c.doneKey='';c.doneBy=-1}
  save();render();sync('choreDone',{id,by,key})}
-function choreSwap(id){const c=(S.chores||[]).find(x=>x.id==id);if(!c)return;c.who0=1-c.who0;save();render();sync('choreSwap',{id})}
+function choreSwap(id){const c=(S.chores||[]).find(x=>x.id==id);if(!c)return;c.who0=1-c.who0;c.doneKey='';c.doneBy=-1;save();render();sync('choreSwap',{id})}
 function choreDel(id){if(!confirm('Xoá việc này khỏi lịch trực nhật?'))return;S.chores=(S.chores||[]).filter(x=>x.id!=id);save();render();sync('choreDel',{id})}
 $('cwd').innerHTML=WD.map((w,i)=>`<option value="${i}">${w}</option>`).join('');$('cwd').value=new Date().getDay();
 $('cev').onchange=()=>{$('cwdw').hidden=$('cev').value=='1'};$('cwdw').hidden=$('cev').value=='1';
@@ -407,9 +407,9 @@ $('cadd').onclick=()=>{const title=$('ct').value.trim();if(!title){$('ct').focus
 let editing=null;
 const save=()=>{try{localStorage.setItem('ttt',JSON.stringify(S))}catch(e){}};
 // công thức: phần người kia phải trả
-function share(it){const t=+it.total||0,v=+it.val||0;
- switch(it.mode){case'equal':return t/2;case'pct':return t*Math.min(v,100)/100;
- case'fixed':return Math.min(v,t);case'full':case'pay':return t;default:return 0}}
+function share(it){const t=Math.max(0,+it.total||0),v=+it.val||0;
+ switch(it.mode){case'equal':return t/2;case'pct':return t*Math.max(0,Math.min(v,100))/100;
+ case'fixed':return Math.max(0,Math.min(v,t));case'full':case'pay':return t;default:return 0}}
 function calc(){const owe=[0,0];S.items.forEach(it=>owe[1-it.payer]+=share(it));return owe}
 function render(){
  const N=S.names,o=calc(),net=o[1]-o[0],from=net>0?1:0,to=1-from;
@@ -420,7 +420,7 @@ function render(){
  `<div class="bar"><i style="width:${p0}%"></i></div><div class="stat"><div><small>${E(N[0])} phải trả</small><b>${fmt(o[0])}</b></div><div><small>${E(N[1])} phải trả</small><b>${fmt(o[1])}</b></div></div><div class="hb">${Math.abs(net)>=1?'<button class="w1" id="hpay">Ghi đã chuyển</button>':''}<button id="hclose">Chốt kỳ</button></div>`;
  $('cnt').textContent=S.items.length+' khoản';
  heroAnim(Math.abs(net),o);
- const pv=$('payer').value;$('payer').innerHTML=N.map((n,i)=>`<option value="${i}">${n}</option>`).join('');
+ const pv=$('payer').value;$('payer').innerHTML=N.map((n,i)=>`<option value="${i}">${E(n)}</option>`).join('');
  $('payer').value=pv||0;
  const mt={equal:'Chia đều',pct:'Theo %',fixed:'Số cụ thể',full:'Chia hết',none:'Tự chịu',pay:'Thanh toán'};
  const iso=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
@@ -440,6 +440,7 @@ function vis(){const m=$('mode').value;document.querySelectorAll('#modes button'
 function cur(){return{name:$('name').value.trim(),total:+$('total').value||0,payer:+$('payer').value,mode:$('mode').value,val:+$('val').value||0,date:$('date').value,note:$('note').value.trim()}}
 function preview(){const c=cur();$('prev').textContent=c.total?`${fmt(c.total)} → ${S.names[1-c.payer]} nợ ${fmt(share(c))}`:''}
 function add(){const c=cur();if(!c.total){$('total').focus();$('prev').textContent='Nhập số tiền trước khi lưu';return}
+ if(c.total<0||c.val<0){$('total').focus();toast('Số tiền không được âm');return}
  const msg=editing?'Đã lưu thay đổi':'Đã thêm "'+(c.name||'khoản chi')+'"';
  let it;if(editing){it=S.items.find(x=>x.id==editing);Object.assign(it,c)}else{it={id:Date.now(),...c};S.items.push(it)}
  sync('upsert',{item:it});
@@ -478,19 +479,62 @@ function apply(r){if(!r||r.error)throw new Error(r&&r.error||'?');
  if(f!==$('n0'))$('n0').value=S.names[0];
  if(f!==$('n1'))$('n1').value=S.names[1];
  if(firstApply||JSON.stringify(S)!==before){firstApply=false;render()}}
-async function call(op,data){
- const r=await fetch(op==='get'?cfg.url+'?room='+encodeURIComponent(cfg.room):cfg.url,
-  op==='get'?{}:{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({room:cfg.room,op,dev,...data})});
- return r.json()}
-async function sync(op,data){if(!(cfg.url&&cfg.room))return;busy++;st('Đang lưu…');
- try{apply(await call(op,data));st('Đã đồng bộ')}catch(e){st('Mất kết nối: '+e.message)}finally{busy--}}
-async function pull(){if(!(cfg.url&&cfg.room)||busy||pend)return;
+async function call(op,data,ms){
+ const ctl=new AbortController(),to=setTimeout(()=>ctl.abort(),ms||30000),post=op!=='get';
+ try{
+  const r=await fetch(post?cfg.url:cfg.url+'?room='+encodeURIComponent(cfg.room),
+   post?{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({room:cfg.room,op,dev,...data}),signal:ctl.signal,cache:'no-store'}:{signal:ctl.signal,cache:'no-store'});
+  if(!r.ok)throw new Error('HTTP '+r.status);
+  return await r.json();
+ }catch(e){
+  if(e&&e.name==='AbortError')throw new Error('quá thời gian chờ');
+  throw e;
+ }finally{clearTimeout(to)}}
+// ---- Hàng đợi: thao tác bị lỗi mạng được giữ lại và tự gửi lại (không mất dữ liệu) ----
+const QOPS={upsert:1,del:1,settings:1,bulk:1,remSave:1,remDel:1,choreSave:1,choreDel:1,choreSwap:1,choreDone:1,token:1};
+let q=(()=>{try{const v=JSON.parse(localStorage.getItem('tttq')||'[]');return Array.isArray(v)?v:[]}catch(e){return[]}})(),flushing=false;
+const qSave=()=>{try{localStorage.setItem('tttq',JSON.stringify(q))}catch(e){}};
+const qKey=j=>{const d=j.data||{};switch(j.op){
+ case'upsert':return 'upsert:'+(d.item&&d.item.id);
+ case'del':return 'del:'+d.id;
+ case'remSave':return 'remSave:'+(d.rem&&d.rem.id);
+ case'remDel':return 'remDel:'+d.id;
+ case'choreSave':case'choreSwap':case'choreDone':return j.op+':'+(d.chore?d.chore.id:d.id);
+ case'choreDel':return 'choreDel:'+d.id}
+ return j.op};
+function qPush(op,data){const k=qKey({op,data});q=q.filter(j=>qKey(j)!==k);q.push({op,data});if(q.length>100)q=q.slice(-100);qSave()}
+const qClear=()=>{q=[];qSave()};
+async function flush(){
+ if(flushing||!q.length||!(cfg.url&&cfg.room))return;
+ flushing=true;
+ try{
+  while(q.length){
+   const j=q[0],r=await call(j.op,j.data);
+   q.shift();qSave();
+   if(r&&r.error){toast(r.error);continue}
+   if(!q.length)apply(r);
+  }
+  st('Đã đồng bộ');
+ }catch(e){st('Mất kết nối: '+e.message+' · sẽ gửi lại')}
+ finally{flushing=false}}
+async function sync(op,data){
+ if(!(cfg.url&&cfg.room))return;
+ if(QOPS[op]){qPush(op,data);st('Đang lưu…');return flush()}
+ if(q.length)await flush();
+ busy++;st('Đang lưu…');
+ try{apply(await call(op,data,op==='close'?60000:30000));st('Đã đồng bộ')}catch(e){st('Mất kết nối: '+e.message)}finally{busy--}}
+let pulling=false,askedUp=0;
+async function pull(){
+ if(!(cfg.url&&cfg.room)||busy||pend||pulling||flushing||q.length||document.hidden)return;
+ pulling=true;
  try{st('Đang tải…');const r=await call('get');
   if(r.error)throw new Error(r.error);
-  if(r.empty&&S.items.length){
-   if(confirm('Sheet đang trống. Tải dữ liệu trên máy này lên Sheet?'))return sync('bulk',{items:S.items,settings:{month:S.month,names:S.names}});
-   return st('Đã huỷ tải lên')}
-  const old=S.items,seen=lg('tttsynced');apply(r);if(seen){const m=diff(old,r.items);if(m)notify(m)}ls('tttsynced','1');st('Đã đồng bộ')}catch(e){st('Mất kết nối: '+e.message)}}
+  if(!r.items.length&&S.items.length&&!askedUp){
+   askedUp=1;
+   if(confirm('Phòng đang trống. Tải '+S.items.length+' khoản trên máy này lên phòng?\nBấm Cancel để bắt đầu trống (dữ liệu trên máy sẽ bị xoá).')){
+    qPush('bulk',{items:S.items,settings:{month:S.month,names:S.names}});pulling=false;return flush()}}
+  const old=S.items,seen=lg('tttsynced');apply(r);if(seen){const m=diff(old,r.items);if(m)notify(m)}ls('tttsynced','1');st('Đã đồng bộ')}catch(e){st('Mất kết nối: '+e.message)}
+ finally{pulling=false}}
 const lg=k=>{try{return localStorage.getItem(k)}catch(e){}},ls=(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}};
 const sig=x=>[x.name,x.total,x.payer,x.mode,x.val,x.date,x.note].join('|');
 function diff(a,b){const m=new Map(a.map(x=>[String(x.id),sig(x)])),ids=new Set(b.map(x=>String(x.id)));
@@ -532,13 +576,15 @@ async function createRoom(url){gerr();cfg.url=url;if(!cfg.url){gerr('Dán link W
  if((S.items.length||(S.rem||[]).length)&&!confirm('Máy này đang có dữ liệu chưa thuộc phòng nào. Phòng mới sẽ bắt đầu trống và dữ liệu này trên máy sẽ bị thay thế. Tiếp tục?'))return;
  busyG(1);st('Đang lưu…');
  try{const r=await call('create',{names:['Người 1','Người 2'],month:'',items:[]});if(r.error)throw new Error(r.error);
-  cfg.room=r.room;saveCfg();ls('tttsynced','');apply(r);st('Đã đồng bộ');roomUI();go('home');toast('Đã tạo phòng. Vào Cài đặt, bấm Mời người khác để gửi mã')}
+  cfg.room=r.room;qClear();askedUp=0;saveCfg();ls('tttsynced','');apply(r);st('Đã đồng bộ');roomUI();go('home');toast('Đã tạo phòng. Vào Cài đặt, bấm Mời người khác để gửi mã')}
  catch(e){st('Mất kết nối: '+e.message);gerr(e.message)}finally{busyG(0)}}
 async function joinRoom(url,raw){gerr();cfg.url=url;const c=String(raw).replace(/\s/g,'').toUpperCase();
  if(!cfg.url||!c){gerr(cfg.url?'Nhập mã phòng hoặc mã mời':'Dán link Web App trước');return}
+ if((S.items.length||(S.rem||[]).length)&&!confirm('Máy này đang có '+S.items.length+' khoản chưa thuộc phòng nào. Vào phòng sẽ thay thế dữ liệu trên máy bằng dữ liệu của phòng. Tiếp tục?'))return;
  const prev=cfg.room;busyG(1);st('Đang tải…');
  try{let r;if(/^\d{6}$/.test(c)){r=await call('join',{code:c});if(r.error)throw new Error(r.error);cfg.room=r.room}
   else{cfg.room=c;r=await call('get');if(r.error)throw new Error(r.error)}
+  if(cfg.room!==prev){qClear();askedUp=0}
   saveCfg();ls('tttsynced','');apply(r);st('Đã đồng bộ');roomUI();go('home');toast('Đã vào phòng')}
  catch(e){cfg.room=prev||'';st('Mất kết nối: '+e.message);gerr(e.message)}finally{busyG(0)}}
 $('gmk').onclick=()=>createRoom($('gurl').value.trim());
@@ -551,13 +597,16 @@ $('inv').onclick=async()=>{let r;try{r=await call('invite',{});if(r.error)throw 
  const text='Vào phòng tính tiền trọ. Mã: '+r.invite+' (hiệu lực 15 phút)\n'+link;
  try{if(navigator.share){await navigator.share({title:'Tính tiền trọ',text});return}}catch(e){if(e.name==='AbortError')return}
  try{await navigator.clipboard.writeText(text);toast('Đã sao chép lời mời')}catch(e){}};
+$('rc').onclick=async()=>{if(!cfg.room)return;try{await navigator.clipboard.writeText(cfg.room);toast('Đã sao chép mã phòng')}catch(e){toast(cfg.room)}};
 $('leave').onclick=async()=>{if(!confirm('Rời phòng? Dữ liệu trên máy này sẽ bị xoá, phòng vẫn còn cho người khác.'))return;
  try{await call('leave',{})}catch(e){}
+ qClear();askedUp=0;
  cfg.room='';saveCfg();ls('tttsynced','');ls('tttpush','');S=blank();save();$('month').value='';$('n0').value=S.names[0];$('n1').value=S.names[1];
  clear();render();roomUI();st('Chưa kết nối');$('notif').textContent='Bật thông báo'};
 roomUI();if(window._inv&&cfg.url&&!cfg.room){$('gcode').value=window._inv;joinRoom(cfg.url,window._inv)}
-setInterval(pull,15000);document.addEventListener('visibilitychange',()=>{if(!document.hidden)pull()});
+setInterval(pull,15000);setInterval(()=>{if(q.length)flush()},20000);addEventListener('online',()=>flush());document.addEventListener('visibilitychange',()=>{if(!document.hidden)pull()});
 if(navigator.serviceWorker)navigator.serviceWorker.addEventListener('message',e=>{if(e.data==='pull')pull()});
 pull();
+if(q.length)flush();
 if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
 </script></body></html>

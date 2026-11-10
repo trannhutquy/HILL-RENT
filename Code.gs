@@ -32,8 +32,8 @@ function chRow_(s,id,room){
   return 0;
 }
 function shareOf_(it){
-  const t=+it.total||0, v=+it.val||0;
-  switch(it.mode){ case 'equal':return t/2; case 'pct':return t*Math.min(v,100)/100; case 'fixed':return Math.min(v,t); case 'full': case 'pay':return t; default:return 0; }
+  const t=Math.max(0,+it.total||0), v=+it.val||0;
+  switch(it.mode){ case 'equal':return t/2; case 'pct':return t*Math.max(0,Math.min(v,100))/100; case 'fixed':return Math.max(0,Math.min(v,t)); case 'full': case 'pay':return t; default:return 0; }
 }
 function newCode_(){ return Utilities.getUuid().replace(/-/g,'').slice(0,16).toUpperCase().match(/.{4}/g).join('-'); }
 
@@ -58,7 +58,7 @@ function read_(room){
     .map(r=>({pid:String(r[1]),label:String(r[2]),closed:day_(r[3]),names:[String(r[4]),String(r[5])],count:+r[6],total:+r[7],o:[+r[8],+r[9]]})).reverse();
   return { room, items, hist, chores:readChores_(room), rem:readRem_(room), settings:{ month:String(p[1]), names:[String(p[2]||'Người 1'),String(p[3]||'Người 2')] } };
 }
-function toRow_(it,room){ return [String(it.id),it.name||'',+it.total||0,+it.payer||0,it.mode||'equal',+it.val||0,it.date||'',it.note||'',room,'']; }
+function toRow_(it,room){ return [String(it.id),it.name||'',Math.max(0,+it.total||0),+it.payer||0,it.mode||'equal',Math.max(0,+it.val||0),it.date||'',it.note||'',room,'']; }
 function rowOf_(s,id,room){
   const n=s.getLastRow(); if(n<2) return 0;
   const v=s.getRange(1,1,n,Math.min(10,s.getLastColumn())).getValues();
@@ -134,7 +134,7 @@ function doPost(e){
       } else if(b.op==='choreDel'){
         const cs=chr_(), row=chRow_(cs,b.id,room); if(row) cs.deleteRow(row);
       } else if(b.op==='choreSwap'){
-        const cs=chr_(), row=chRow_(cs,b.id,room); if(row){ const cell=cs.getRange(row,5); cell.setValue(1-(+cell.getValue()||0)); }
+        const cs=chr_(), row=chRow_(cs,b.id,room); if(row){ const cell=cs.getRange(row,5); cell.setValue(1-(+cell.getValue()||0)); cs.getRange(row,9,1,2).setValues([['','']]); }
       } else if(b.op==='choreDone'){
         const cs=chr_(), row=chRow_(cs,b.id,room);
         if(row){
@@ -204,7 +204,7 @@ function push_(room,dev,title,body){
 
 // ---------- Nhắc hẹn ----------
 function readRem_(room){
-  return rem_().getDataRange().getValues().slice(1).filter(r=>r[0]!==''&&String(r[8])===room)
+  return rem_().getDataRange().getValues().slice(1).filter(r=>r[0]!==''&&String(r[8])===room&&+r[6]!==0)
     .map(r=>({id:Number(r[0]),title:String(r[1]),type:String(r[2]),val:day_(r[3]),time:tm_(r[4]),bal:+r[5]||0,on:+r[6]||0}));
 }
 function balText_(room){

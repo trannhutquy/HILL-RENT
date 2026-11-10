@@ -21,9 +21,14 @@ git push origin main
 
 ## Sau khi sửa app (index.html, CSS/JS)
 
-1. Tăng phiên bản cache trong `sw.js`: `const V='ttt-vNN'` → `ttt-vNN+1`. Không tăng thì máy đã cài sẽ tiếp tục dùng bản cũ trong cache.
+1. Tăng phiên bản cache trong `sw.js`: `const V='ttt-vNN'` → `ttt-vNN+1`. SW dùng network-first nên bản mới vẫn tới máy khi có mạng; tăng `V` để bản dùng offline cũng là bản mới.
 2. Push xong đợi ~1 phút, mở https://trannhutquy.github.io/HILL-RENT/sw.js kiểm tra đã thấy `ttt-vNN` mới.
 3. Trên điện thoại: mở app 2 lần (hoặc tải lại) để service worker nhận bản mới.
+
+## Dữ liệu trên máy
+
+- `localStorage.ttt` = dữ liệu hiện tại; `localStorage.tttq` = **hàng đợi thao tác chưa gửi được** (index.html). Không xoá `tttq` khi đang sửa code — đó là các khoản chi chưa lên Sheet.
+- `localStorage.tttcfg` = link `/exec` + mã phòng; `tttdev` = id máy (dùng cho thông báo đẩy).
 
 ## Sau khi sửa backend (Code.gs)
 
