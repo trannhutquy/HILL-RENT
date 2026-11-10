@@ -260,6 +260,14 @@ input:focus,select:focus{background:var(--g1)}
 <div class="hint">Mã phòng (bấm để sao chép) — dùng để vào phòng trên máy khác:</div><div id="rc" title="Bấm để sao chép" style="font-family:ui-monospace,Consolas,monospace;font-weight:700;font-size:13px;letter-spacing:.06em;padding:10px 12px;border-radius:12px;background:var(--fld);color:var(--tx);cursor:pointer;word-break:break-all;margin:4px 0 10px"></div><div class="hint">Bấm Mời để lấy mã 6 số cho bạn cùng trọ.</div>
 <div id="invbox" hidden style="text-align:center;margin:14px 0"><div id="ic" style="font-size:38px;font-weight:800;letter-spacing:.22em"></div><div class="hint" id="iexp"></div></div>
 <div class="row"><button id="inv">Mời người khác</button><button class="g" id="notif">Bật thông báo</button><button class="g" id="leave">Rời phòng</button></div></div></div>
+<div class="card" id="vercard"><b>Phiên bản</b>
+<div style="display:flex;align-items:center;gap:10px;margin:6px 0;flex-wrap:wrap">
+<span id="vcur" style="font-family:ui-monospace,Consolas,monospace;font-weight:700;font-size:13px;padding:6px 10px;border-radius:10px;background:var(--fld)"></span>
+<button class="g" id="vcheck" style="padding:6px 12px;font-size:13px">Kiểm tra cập nhật</button>
+<button id="vupd" hidden style="padding:6px 12px;font-size:13px;width:auto">Cập nhật ngay</button>
+</div>
+<div class="hint" id="vinfo">Bản đang chạy trên máy này.</div>
+</div>
 <button class="g" id="reset" style="width:100%">Xoá hết khoản chi</button>
 </section>
 </div>
@@ -317,7 +325,7 @@ $('radd').onclick=()=>{const t=$('rty').value,v=t=='once'?$('rvd').value:$('rvm'
  S.rem=(S.rem||[]).concat(r);rrender();$('rt').value='';sync('remSave',{rem:r})};
 const esc=s=>String(s).replace(/[&<>"]/g,c=>'&#'+c.charCodeAt(0)+';');
 function go(t){const nv=$('nav');nv.classList.remove('mv');void nv.offsetWidth;nv.classList.add('mv');const od=['home','chi','truc','nhac','cai'],dd=od.indexOf(t)-od.indexOf(document.body.dataset.tab||'home');document.body.dataset.dir=dd<0?'l':'r';document.body.dataset.tab=t;document.querySelectorAll('.v').forEach(v=>v.classList.toggle('on',v.id=='v-'+t));
- document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('on',b.dataset.t==t));$('nav').style.setProperty('--i',['home','chi','truc','nhac','cai'].indexOf(t));scrollTo(0,0)}
+ document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('on',b.dataset.t==t));$('nav').style.setProperty('--i',['home','chi','truc','nhac','cai'].indexOf(t));if(t==='cai')checkVer(true);scrollTo(0,0)}
 document.body.dataset.tab='home';
 document.querySelectorAll('#nav button').forEach(b=>b.onclick=()=>go(b.dataset.t));
 function openSheet(){$('sheet').classList.add('on');lockUI();
@@ -598,6 +606,25 @@ $('inv').onclick=async()=>{let r;try{r=await call('invite',{});if(r.error)throw 
  try{if(navigator.share){await navigator.share({title:'Tính tiền trọ',text});return}}catch(e){if(e.name==='AbortError')return}
  try{await navigator.clipboard.writeText(text);toast('Đã sao chép lời mời')}catch(e){}};
 $('rc').onclick=async()=>{if(!cfg.room)return;try{await navigator.clipboard.writeText(cfg.room);toast('Đã sao chép mã phòng')}catch(e){toast(cfg.room)}};
+// ---- Phiên bản: hiển thị + kiểm tra bản mới trên GitHub Pages ----
+const APP_V='ttt-v27',APP_DATE='10/11/2026',vNum=s=>+((String(s).match(/\d+/)||[0])[0]),vShow=()=>{$('vcur').textContent=APP_V.replace('ttt-','')+' · '+APP_DATE};
+let vLast=0;
+async function checkVer(auto){
+ if(auto&&Date.now()-vLast<3e5)return;vLast=Date.now();
+ const b=$('vcheck'),i=$('vinfo'),old=b.textContent;b.disabled=true;b.textContent='Đang kiểm tra…';$('vupd').hidden=true;i.style.color='';i.textContent='Đang kiểm tra bản mới…';
+ try{
+  const t=await (await fetch('sw.js?cb='+Date.now(),{cache:'no-store'})).text(),
+   m=t.match(/const V='(ttt-v\d+)'/);if(!m)throw 0;
+  if(vNum(m[1])>vNum(APP_V)){i.style.color='#00b894';i.innerHTML='Có bản mới <b>'+esc(m[1])+'</b>. Bấm Cập nhật ngay để tải.';$('vupd').hidden=false}
+  else{i.style.color='#00b894';i.textContent='Đang dùng bản mới nhất ('+APP_V+', '+APP_DATE+').'}
+ }catch(e){i.style.color='#e17055';i.textContent='Không kiểm tra được — kiểm tra mạng rồi thử lại.'}
+ finally{b.disabled=false;b.textContent=old}
+}
+$('vcheck').onclick=()=>checkVer(false);
+$('vupd').onclick=async()=>{const b=$('vupd');b.disabled=true;b.textContent='Đang cập nhật…';
+ try{const r=await navigator.serviceWorker.getRegistration();if(r)await r.update()}catch(e){}
+ location.reload()};
+vShow();
 $('leave').onclick=async()=>{if(!confirm('Rời phòng? Dữ liệu trên máy này sẽ bị xoá, phòng vẫn còn cho người khác.'))return;
  try{await call('leave',{})}catch(e){}
  qClear();askedUp=0;
