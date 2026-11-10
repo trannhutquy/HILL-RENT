@@ -1,0 +1,6 @@
+# Bản sao/backup tạm, không đưa lên GitHub
+App_Scrift/
+*.bak
+*.tmp
+Thumbs.db
+.DS_Store
