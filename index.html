@@ -92,9 +92,17 @@ h1{margin:0;font-size:22px;font-weight:800;letter-spacing:-.02em;line-height:1.2
 .flow{display:flex;align-items:center;gap:8px;margin:10px 0 14px;font-size:13.5px;min-width:0}
 .flow b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:700}
 .av{width:28px;height:28px;border-radius:50%;background:var(--w2);display:grid;place-items:center;font-weight:800;flex:none;font-size:13px;border:1px solid var(--wl)}
-.ar{flex:1;height:2px;min-width:20px;border-radius:99px;position:relative;
-  background:linear-gradient(90deg,rgba(255,255,255,.8),rgba(255,255,255,.45))}
-.ar:after{content:"";position:absolute;right:-1px;top:-4px;border:5px solid transparent;border-left:8px solid rgba(255,255,255,.85);border-right:0}
+.ar{flex:1;height:2px;min-width:24px;border-radius:99px;position:relative;
+  background:linear-gradient(90deg,
+    rgba(255,255,255,.38) 0 44%,
+    rgba(255,255,255,.98) 50%,
+    rgba(255,255,255,.38) 56% 100%);
+  background-size:300% 100%;background-position:100% 0;
+  animation:arFlow 1.7s linear infinite}
+@keyframes arFlow{from{background-position:100% 0}to{background-position:0% 0}}
+.ar:after{content:"";position:absolute;right:-1px;top:-4px;border:5px solid transparent;border-left:8px solid rgba(255,255,255,.85);border-right:0;
+  animation:arTip 1.7s linear infinite}
+@keyframes arTip{0%,68%{transform:translateX(0);opacity:.85;filter:none}78%{transform:translateX(3px);opacity:1;filter:drop-shadow(0 0 4px rgba(255,255,255,.85))}88%,100%{transform:translateX(0);opacity:.85;filter:none}}
 .bar{height:6px;border-radius:99px;background:rgba(255,255,255,.24);overflow:hidden;margin-top:6px}
 .bar i{display:block;height:100%;background:rgba(255,255,255,.94);border-radius:99px;transition:width var(--t-slow) var(--ease)}
 .stat{display:flex;gap:8px;margin-top:12px}
@@ -708,7 +716,7 @@ $('inv').onclick=async()=>{let r;try{r=await call('invite',{});if(r.error)throw 
  try{await navigator.clipboard.writeText(text);toast('Đã sao chép lời mời')}catch(e){}};
 $('rc').onclick=async()=>{if(!cfg.room)return;try{await navigator.clipboard.writeText(cfg.room);toast('Đã sao chép mã phòng')}catch(e){toast(cfg.room)}};
 // ---- Phiên bản: hiển thị + kiểm tra bản mới trên GitHub Pages ----
-const APP_V='ttt-v30',APP_DATE='10/11/2026',vNum=s=>+((String(s).match(/\d+/)||[0])[0]),vShow=()=>{$('vcur').textContent=APP_V.replace('ttt-','')+' · '+APP_DATE};
+const APP_V='ttt-v31',APP_DATE='10/11/2026',vNum=s=>+((String(s).match(/\d+/)||[0])[0]),vShow=()=>{$('vcur').textContent=APP_V.replace('ttt-','')+' · '+APP_DATE};
 let vLast=0;
 async function checkVer(auto){
  if(auto&&Date.now()-vLast<3e5)return;vLast=Date.now();
