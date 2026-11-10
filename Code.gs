@@ -65,6 +65,18 @@ function rowOf_(s,id,room){
   for(let i=1;i<n;i++) if(String(v[i][0])===String(id)&&String(v[i][8])===room&&String(v[i][9]||'')==='') return i+1;
   return 0;
 }
+function rowAny_(s,id,room){
+  const n=s.getLastRow(); if(n<2) return 0;
+  const v=s.getRange(1,1,n,Math.min(10,s.getLastColumn())).getValues();
+  for(let i=1;i<n;i++) if(String(v[i][0])===String(id)&&String(v[i][8])===room) return i+1;
+  return 0;
+}
+function hRow_(s,id,room){
+  const n=s.getLastRow(); if(n<2) return 0;
+  const v=s.getRange(1,1,n,s.getLastColumn()).getValues();
+  for(let i=1;i<n;i++) if(String(v[i][0])===String(id)&&String(v[i][8])===room) return i+1;
+  return 0;
+}
 function addItems_(room,items){
   if(!items.length) return; const s=dat_();
   s.getRange(s.getLastRow()+1,1,items.length,10).setValues(items.map(it=>toRow_(it,room)));
@@ -75,7 +87,10 @@ function doGet(e){
   return out_(read_(room) || {error:'Sai mã phòng'});
 }
 function doPost(e){
-  const b = JSON.parse(e.postData.contents);
+  let b;
+  try{ b = JSON.parse((e&&e.postData&&e.postData.contents)||'{}'); }
+  catch(err){ return out_({error:'Dữ liệu gửi lên không hợp lệ'}); }
+  if(!b||typeof b!=='object'||Array.isArray(b)) return out_({error:'Dữ liệu gửi lên không hợp lệ'});
   const lock = LockService.getScriptLock(); lock.waitLock(20000);
   try{
     let room = String(b.room||'').trim().toUpperCase(), note = null, invite = null, detail = null;
@@ -94,7 +109,9 @@ function doPost(e){
       if(!roomRow_(room)) return out_({error:'Sai mã phòng'});
       const s = dat_();
       if(b.op==='upsert'){
-        const row=rowOf_(s,b.item.id,room), v=toRow_(b.item,room);
+        const row=rowOf_(s,b.item.id,room);
+        if(!row&&rowAny_(s,b.item.id,room)) return out_({error:'Khoản này đã thuộc kỳ đã chốt nên không sửa được'});
+        const v=toRow_(b.item,room);
         if(row) s.getRange(row,1,1,10).setValues([v]); else s.appendRow(v);
         const nm=names_(room), pi=+b.item.payer||0;
         note = b.item.mode==='pay' ? ['Đã trả tiền', nm[pi]+' đã chuyển '+money_(b.item.total)+' cho '+nm[1-pi]]
@@ -147,7 +164,7 @@ function doPost(e){
         const f=p=>Utilities.formatDate(new Date(),TZ,p), r=b.rem;
         rem_().appendRow([String(r.id),r.title,r.type,String(r.val),String(r.time),+r.bal?1:0,1,(String(r.time)<=f('HH:mm'))?f('yyyy-MM-dd'):'',room]);
       } else if(b.op==='remDel'){
-        const rs=rem_(), row=rowOf_(rs,b.id,room); if(row) rs.deleteRow(row);
+        const rs=rem_(), row=hRow_(rs,b.id,room); if(row) rs.deleteRow(row);
       } else if(b.op==='token'){
         saveToken_(room,b.dev,b.token);
       } else if(b.op==='leave'){
@@ -156,6 +173,15 @@ function doPost(e){
         const c=CacheService.getScriptCache(); let code;
         do{ code=String(Math.floor(100000+Math.random()*900000)); }while(c.get('inv'+code));
         c.put('inv'+code,room,900); invite=code;
+      } else if(b.op==='health'){
+        let trigger=false; try{ trigger=ScriptApp.getProjectTriggers().some(t=>t.getHandlerFunction()==='kiemTraNhacHen'); }catch(e){}
+        let sa=false; try{ sa=!!JSON.parse(PropertiesService.getScriptProperties().getProperty('SA')||'null'); }catch(e){}
+        const d=tok_().getDataRange().getValues();
+        const tokens=d.slice(1).filter(r=>r[1]&&String(r[3])===room).length;
+        return out_({health:{trigger,sa,tokens}});
+      } else if(b.op==='testpush'){
+        const n=push_(room,b.dev,'Thử thông báo','Nếu bạn thấy tin này, thông báo đẩy đang hoạt động.');
+        return out_({test:{sent:n||0}});
       }
     }
     SpreadsheetApp.flush();
@@ -185,12 +211,12 @@ function accessToken_(sa){
   const r=UrlFetchApp.fetch('https://oauth2.googleapis.com/token',{method:'post',payload:{grant_type:'urn:ietf:params:oauth:grant-type:jwt-bearer',assertion:hd+'.'+cl+'.'+sig}});
   const t=JSON.parse(r.getContentText()).access_token; c.put('fcmtok',t,3000); return t;
 }
-function push_(room,dev,title,body){
+function push_(room,dev,title,body,all){
   try{
-    const sa=JSON.parse(PropertiesService.getScriptProperties().getProperty('SA')||'null'); if(!sa) return;
+    const sa=JSON.parse(PropertiesService.getScriptProperties().getProperty('SA')||'null'); if(!sa) return 0;
     const s=tok_(), d=s.getDataRange().getValues(), targets=[];
-    for(let i=1;i<d.length;i++) if(d[i][1] && String(d[i][3])===room && d[i][0]!==dev) targets.push({row:i+1,token:d[i][1]});
-    if(!targets.length) return;
+    for(let i=1;i<d.length;i++) if(d[i][1] && String(d[i][3])===room && (all||d[i][0]!==dev)) targets.push({row:i+1,token:d[i][1]});
+    if(!targets.length) return 0;
     const at=accessToken_(sa), dead=[];
     targets.forEach(t=>{
       const r=UrlFetchApp.fetch('https://fcm.googleapis.com/v1/projects/'+sa.project_id+'/messages:send',{method:'post',contentType:'application/json',
@@ -199,7 +225,8 @@ function push_(room,dev,title,body){
       if(r.getResponseCode()===404||/UNREGISTERED/.test(r.getContentText())) dead.push(t.row);
     });
     dead.sort((a,b)=>b-a).forEach(r=>s.deleteRow(r));
-  }catch(e){ console.error(e); }
+    return targets.length;
+  }catch(e){ console.error(e); return 0; }
 }
 
 // ---------- Nhắc hẹn ----------

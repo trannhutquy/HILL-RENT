@@ -206,7 +206,7 @@ input:focus,select:focus{background:var(--g1)}
 <div class="bg" aria-hidden="true"><i></i><i></i><i></i></div>
 <div class="w">
 <div id="toast"></div>
-<div class="top"><h1 style="flex:1">Tính tiền trọ</h1><span id="st" data-s="idle" title="Chưa kết nối"></span><button class="g" id="cfgb" style="flex:none">⚙️</button></div>
+<div class="top"><h1 style="flex:1">Tính tiền trọ</h1><button id="qb" hidden style="flex:none;width:auto;background:#fdcb6e;color:#2d3436;font-size:12px;font-weight:700;padding:6px 10px;border-radius:99px;box-shadow:none" title="Các thay đổi chưa gửi được lên Sheet — bấm để gửi lại"></button><span id="st" data-s="idle" title="Chưa kết nối"></span><button class="g" id="cfgb" style="flex:none">⚙️</button></div>
 
 <section class="v on" id="v-home">
 <div class="card hero" id="hero"></div>
@@ -260,6 +260,10 @@ input:focus,select:focus{background:var(--g1)}
 <div class="hint">Mã phòng (bấm để sao chép) — dùng để vào phòng trên máy khác:</div><div id="rc" title="Bấm để sao chép" style="font-family:ui-monospace,Consolas,monospace;font-weight:700;font-size:13px;letter-spacing:.06em;padding:10px 12px;border-radius:12px;background:var(--fld);color:var(--tx);cursor:pointer;word-break:break-all;margin:4px 0 10px"></div><div class="hint">Bấm Mời để lấy mã 6 số cho bạn cùng trọ.</div>
 <div id="invbox" hidden style="text-align:center;margin:14px 0"><div id="ic" style="font-size:38px;font-weight:800;letter-spacing:.22em"></div><div class="hint" id="iexp"></div></div>
 <div class="row"><button id="inv">Mời người khác</button><button class="g" id="notif">Bật thông báo</button><button class="g" id="leave">Rời phòng</button></div></div></div>
+<div class="card"><b>Thông báo &amp; nhắc hẹn</b>
+<div class="hint" id="diag">Bấm kiểm tra để xem máy chủ đã bật nhắc hẹn và thông báo đẩy chưa.</div>
+<div class="row"><button class="g" id="diagb" style="padding:6px 12px;font-size:13px">Kiểm tra</button><button class="g" id="testb" style="padding:6px 12px;font-size:13px">Gửi thử thông báo</button></div>
+</div>
 <div class="card" id="vercard"><b>Phiên bản</b>
 <div style="display:flex;align-items:center;gap:10px;margin:6px 0;flex-wrap:wrap">
 <span id="vcur" style="font-family:ui-monospace,Consolas,monospace;font-weight:700;font-size:13px;padding:6px 10px;border-radius:10px;background:var(--fld)"></span>
@@ -501,7 +505,7 @@ async function call(op,data,ms){
 // ---- Hàng đợi: thao tác bị lỗi mạng được giữ lại và tự gửi lại (không mất dữ liệu) ----
 const QOPS={upsert:1,del:1,settings:1,bulk:1,remSave:1,remDel:1,choreSave:1,choreDel:1,choreSwap:1,choreDone:1,token:1};
 let q=(()=>{try{const v=JSON.parse(localStorage.getItem('tttq')||'[]');return Array.isArray(v)?v:[]}catch(e){return[]}})(),flushing=false;
-const qSave=()=>{try{localStorage.setItem('tttq',JSON.stringify(q))}catch(e){}};
+const qSave=()=>{try{localStorage.setItem('tttq',JSON.stringify(q))}catch(e){};qUI()};
 const qKey=j=>{const d=j.data||{};switch(j.op){
  case'upsert':return 'upsert:'+(d.item&&d.item.id);
  case'del':return 'del:'+d.id;
@@ -512,17 +516,20 @@ const qKey=j=>{const d=j.data||{};switch(j.op){
  return j.op};
 function qPush(op,data){const k=qKey({op,data});q=q.filter(j=>qKey(j)!==k);q.push({op,data});if(q.length>100)q=q.slice(-100);qSave()}
 const qClear=()=>{q=[];qSave()};
+function qUI(){const b=$('qb');if(!b)return;b.hidden=!q.length;if(q.length)b.textContent=q.length+' chờ gửi'}
+qUI();
 async function flush(){
  if(flushing||!q.length||!(cfg.url&&cfg.room))return;
- flushing=true;
+ flushing=true;let rej=0;
  try{
   while(q.length){
    const j=q[0],r=await call(j.op,j.data);
    q.shift();qSave();
-   if(r&&r.error){toast(r.error);continue}
+   if(r&&r.error){rej++;toast(r.error);continue}
    if(!q.length)apply(r);
   }
-  st('Đã đồng bộ');
+  if(rej){st('Có thay đổi bị từ chối');setTimeout(()=>{if(!q.length&&!flushing)pull()},600)}
+  else st('Đã đồng bộ');
  }catch(e){st('Mất kết nối: '+e.message+' · sẽ gửi lại')}
  finally{flushing=false}}
 async function sync(op,data){
@@ -607,7 +614,7 @@ $('inv').onclick=async()=>{let r;try{r=await call('invite',{});if(r.error)throw 
  try{await navigator.clipboard.writeText(text);toast('Đã sao chép lời mời')}catch(e){}};
 $('rc').onclick=async()=>{if(!cfg.room)return;try{await navigator.clipboard.writeText(cfg.room);toast('Đã sao chép mã phòng')}catch(e){toast(cfg.room)}};
 // ---- Phiên bản: hiển thị + kiểm tra bản mới trên GitHub Pages ----
-const APP_V='ttt-v27',APP_DATE='10/11/2026',vNum=s=>+((String(s).match(/\d+/)||[0])[0]),vShow=()=>{$('vcur').textContent=APP_V.replace('ttt-','')+' · '+APP_DATE};
+const APP_V='ttt-v28',APP_DATE='10/11/2026',vNum=s=>+((String(s).match(/\d+/)||[0])[0]),vShow=()=>{$('vcur').textContent=APP_V.replace('ttt-','')+' · '+APP_DATE};
 let vLast=0;
 async function checkVer(auto){
  if(auto&&Date.now()-vLast<3e5)return;vLast=Date.now();
@@ -625,6 +632,28 @@ $('vupd').onclick=async()=>{const b=$('vupd');b.disabled=true;b.textContent='Đa
  try{const r=await navigator.serviceWorker.getRegistration();if(r)await r.update()}catch(e){}
  location.reload()};
 vShow();
+// ---- Hàng đợi: bấm badge để gửi lại ngay ----
+$('qb').onclick=async()=>{if(!q.length)return;if(!(cfg.url&&cfg.room)){toast('Chưa vào phòng');return}
+ toast('Đang gửi '+q.length+' thay đổi…');await flush();toast(q.length?('Còn '+q.length+' chưa gửi được'):'Đã gửi xong')};
+// ---- Chẩn đoán thông báo / nhắc hẹn ----
+$('diagb').onclick=async()=>{const i=$('diag'),b=$('diagb');b.disabled=true;i.style.color='';i.textContent='Đang kiểm tra máy chủ…';
+ try{const r=await call('health');if(r.error)throw new Error(r.error);
+  const h=r.health||{},bad=[];
+  if(!h.trigger)bad.push('chưa có lịch tự động (chạy hàm taoBoHen trong Apps Script)');
+  if(!h.sa)bad.push('thiếu Script property SA cho thông báo đẩy');
+  if(!h.tokens)bad.push('chưa có máy nào bật thông báo');
+  i.style.color=bad.length?'#e17055':'#00b894';
+  i.textContent=bad.length?('Cần sửa: '+bad.join('; ')+'.'):('Máy chủ đã bật nhắc hẹn, có '+h.tokens+' máy nhận thông báo.');
+ }catch(e){i.style.color='#e17055';i.textContent='Không kiểm tra được: '+e.message}
+ finally{b.disabled=false}};
+$('testb').onclick=async()=>{const i=$('diag'),b=$('testb');b.disabled=true;i.style.color='';i.textContent='Đang gửi thử…';
+ try{const r=await call('testpush',{},60000);if(r.error)throw new Error(r.error);
+  const n=(r.test&&r.test.sent)||0;
+  i.style.color=n?'#00b894':'#e17055';
+  i.textContent=n?('Đã gửi thử tới '+n+' máy (gồm cả máy này nếu đã bật thông báo).'):'Chưa có máy nào bật thông báo nên không gửi được.';
+  if(n)toast('Đã gửi thử thông báo');
+ }catch(e){i.style.color='#e17055';i.textContent='Gửi thử thất bại: '+e.message}
+ finally{b.disabled=false}};
 $('leave').onclick=async()=>{if(!confirm('Rời phòng? Dữ liệu trên máy này sẽ bị xoá, phòng vẫn còn cho người khác.'))return;
  try{await call('leave',{})}catch(e){}
  qClear();askedUp=0;
