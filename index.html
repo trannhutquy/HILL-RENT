@@ -2,7 +2,7 @@
 <html lang="vi"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="manifest" href="manifest.webmanifest">
-<meta name="theme-color" content="#6c5ce7">
+<meta name="theme-color" content="#5B4CE0">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Tiền trọ">
@@ -14,168 +14,189 @@
 /* ============ TOKENS ============ */
 :root{
   box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
-  color-scheme:light dark;
-  --bg:#f4f5fb;--card:#ffffff;--tx:#171c33;--mut:#616984;
-  --a:#5b4ce0;--a2:#7d6df2;--b:#0aa37f;--ln:#e5e8f3;--fld:#f4f5fb;
-  --btn1:#5b4ce0;--btn2:#7d6df2;
-  --a-weak:rgba(91,76,224,.10);--a-ring:rgba(91,76,224,.20);
-  --w1:rgba(10,12,38,.20);--w2:rgba(10,12,38,.30);--wl:rgba(255,255,255,.20);
-  --sh:0 1px 2px rgba(23,28,51,.04),0 10px 28px rgba(60,70,150,.07);
-  --sh-lg:0 18px 48px rgba(30,36,90,.20);
-  --r-sm:12px;--r:18px;--r-lg:22px;--pill:999px;
+  color-scheme:light;
+  --paper:#F5F6FC;--card:#FFFFFF;--ink:#171B36;--mut:#69708E;
+  --violet:#5B4CE0;--violet2:#7D6DF2;--mint:#0FA37F;--amber:#E6941A;--rose:#E4645B;
+  --line:#E4E7F2;--field:#F1F3FA;
+  --a:var(--violet);--a2:var(--violet2);--b:var(--mint);
+  --btn1:var(--violet);--btn2:var(--violet2);
+  --a-weak:rgba(91,76,224,.10);--a-ring:rgba(91,76,224,.18);
+  --sh:0 1px 2px rgba(23,27,54,.04),0 8px 24px rgba(60,70,150,.06);
+  --sh-lg:0 22px 56px rgba(30,36,90,.22);
+  --w1:rgba(10,12,38,.20);--w2:rgba(10,12,38,.28);--wl:rgba(255,255,255,.22);
+  --r-sm:12px;--r:18px;--r-lg:24px;--pill:999px;
   --ease:cubic-bezier(.22,.8,.3,1);--t-fast:140ms;--t:220ms;--t-slow:320ms;
 }
 @media(prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --bg:#0e1124;--card:#171c36;--tx:#e9ecfb;--mut:#959dc2;
-  --a:#9a8dff;--a2:#b7adff;--b:#2fd3aa;--ln:#262c4d;--fld:#11152c;
-  --btn1:#5f50dc;--btn2:#7d6df2;
+  color-scheme:dark;
+  --paper:#0E1124;--card:#171C36;--ink:#EAECFA;--mut:#9AA2C6;
+  --violet:#9A8DFF;--violet2:#B7ADFF;--mint:#2FD3AA;--amber:#F0B349;--rose:#FF8C82;
+  --line:#272D50;--field:#11152C;
   --a-weak:rgba(154,141,255,.14);--a-ring:rgba(154,141,255,.22);
-  --w1:rgba(10,12,38,.20);--w2:rgba(10,12,38,.30);--wl:rgba(255,255,255,.20);
-  --sh:0 1px 2px rgba(0,0,0,.28),0 12px 30px rgba(0,0,0,.26);
-  --sh-lg:0 20px 50px rgba(0,0,0,.55);
+  --sh:0 1px 2px rgba(0,0,0,.28),0 10px 28px rgba(0,0,0,.24);
+  --sh-lg:0 22px 56px rgba(0,0,0,.55);
+  --w1:rgba(4,6,20,.28);--w2:rgba(4,6,20,.36);
 }}
 :root[data-theme="dark"]{
-  --bg:#0e1124;--card:#171c36;--tx:#e9ecfb;--mut:#959dc2;
-  --a:#9a8dff;--a2:#b7adff;--b:#2fd3aa;--ln:#262c4d;--fld:#11152c;
-  --btn1:#5f50dc;--btn2:#7d6df2;
+  color-scheme:dark;
+  --paper:#0E1124;--card:#171C36;--ink:#EAECFA;--mut:#9AA2C6;
+  --violet:#9A8DFF;--violet2:#B7ADFF;--mint:#2FD3AA;--amber:#F0B349;--rose:#FF8C82;
+  --line:#272D50;--field:#11152C;
   --a-weak:rgba(154,141,255,.14);--a-ring:rgba(154,141,255,.22);
-  --w1:rgba(10,12,38,.20);--w2:rgba(10,12,38,.30);--wl:rgba(255,255,255,.20);
-  --sh:0 1px 2px rgba(0,0,0,.28),0 12px 30px rgba(0,0,0,.26);
-  --sh-lg:0 20px 50px rgba(0,0,0,.55);
+  --sh:0 1px 2px rgba(0,0,0,.28),0 10px 28px rgba(0,0,0,.24);
+  --sh-lg:0 22px 56px rgba(0,0,0,.55);
+  --w1:rgba(4,6,20,.28);--w2:rgba(4,6,20,.36);
 }
 
 /* ============ BASE ============ */
 *{box-sizing:border-box}
 html{scroll-padding-top:env(safe-area-inset-top,0px);-webkit-text-size-adjust:100%}
-body{margin:0;color:var(--tx);background:var(--bg);font:15px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent}
+body{margin:0;color:var(--ink);background:var(--paper);font:15px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent}
 .bg{position:fixed;inset:0;z-index:-1;pointer-events:none;background:
-  radial-gradient(760px 340px at 50% -150px,rgba(91,76,224,.15),transparent 70%),
-  radial-gradient(520px 320px at 110% 8%,rgba(10,163,127,.09),transparent 70%),
-  radial-gradient(680px 360px at 40% 108%,rgba(91,76,224,.06),transparent 70%),var(--bg)}
+  radial-gradient(700px 320px at 50% -140px,rgba(91,76,224,.14),transparent 70%),
+  radial-gradient(520px 300px at 108% 6%,rgba(15,163,127,.08),transparent 70%),
+  radial-gradient(620px 340px at 42% 106%,rgba(91,76,224,.05),transparent 70%),var(--paper)}
 .bg i{display:none}
 .w{max-width:720px;margin:0 auto;padding:16px 15px 140px}
-h1{margin:0;font-size:22px;font-weight:800;letter-spacing:-.02em;line-height:1.2;color:var(--tx)}
+h1{margin:0;font-size:22px;font-weight:800;letter-spacing:-.025em;line-height:1.18;color:var(--ink)}
+.num{font-variant-numeric:tabular-nums}
 
 /* ============ HEADER ============ */
-.top{display:flex;align-items:center;gap:8px;margin:0 0 14px}
-#qb{min-height:30px;padding:5px 10px;border-radius:var(--pill);background:#f7c948;color:#3a2b00;font-size:12px;font-weight:800;border:0;box-shadow:none;flex:none}
-#cfgb{width:40px;height:40px;min-height:40px;padding:0;border-radius:50%;font-size:17px;flex:none;line-height:1}
-#st{width:10px;height:10px;border-radius:50%;background:#b9bfd4;flex:none;cursor:pointer;transition:background var(--t)}
-#st[data-s=ok]{background:#22c55e}
-#st[data-s=warn]{background:#f5a623;animation:dotPulse 1.8s ease-in-out infinite}
-#st[data-s=bad]{background:#ef4444;animation:dotPulse 1.4s ease-in-out infinite}
-@keyframes dotPulse{50%{opacity:.35}}
+.top{display:flex;align-items:center;gap:9px;margin:0 0 16px}
+#qb{min-height:30px;padding:5px 11px;border-radius:var(--pill);background:var(--amber);color:#2b1c00;font-size:12px;font-weight:800;border:0;box-shadow:0 4px 12px rgba(230,148,26,.24);flex:none}
+#cfgb{width:42px;height:42px;min-height:42px;padding:0;border-radius:50%;font-size:17px;flex:none;line-height:1}
+#st{width:11px;height:11px;border-radius:50%;background:#B9BFD4;flex:none;cursor:pointer;box-shadow:0 0 0 3px color-mix(in srgb,#B9BFD4 18%,transparent);transition:background var(--t),box-shadow var(--t)}
+#st[data-s=ok]{background:var(--mint);box-shadow:0 0 0 3px color-mix(in srgb,var(--mint) 18%,transparent)}
+#st[data-s=warn]{background:var(--amber);box-shadow:0 0 0 3px color-mix(in srgb,var(--amber) 20%,transparent);animation:dotPulse 1.8s ease-in-out infinite}
+#st[data-s=bad]{background:var(--rose);box-shadow:0 0 0 3px color-mix(in srgb,var(--rose) 18%,transparent);animation:dotPulse 1.4s ease-in-out infinite}
+@keyframes dotPulse{50%{opacity:.4}}
 
 /* ============ CARDS ============ */
-.card{background:var(--card);border:1px solid var(--ln);border-radius:var(--r-lg);padding:16px;margin:0 0 12px;box-shadow:var(--sh)}
-.card>b:first-child,.card>#cfg>b:first-child{display:block;font-size:15.5px;font-weight:800;letter-spacing:-.01em}
-.ch{display:flex;align-items:center;gap:8px;margin:0 0 8px}
-.ch b{flex:1;min-width:0;font-size:15.5px;font-weight:800;letter-spacing:-.01em}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px;margin:0 0 12px;box-shadow:var(--sh)}
+.card>b:first-child,.card>#cfg>b:first-child{display:block;font-size:15.5px;font-weight:800;letter-spacing:-.015em}
+.card-sub{display:block;font-size:12.5px;color:var(--mut);font-weight:500;margin-top:2px}
+.ch{display:flex;align-items:center;gap:8px;margin:0 0 10px}
+.ch b{flex:1;min-width:0;font-size:15.5px;font-weight:800;letter-spacing:-.015em}
 .ch .hint{margin:0}
 .ch .btn-s,.ch .g{flex:none}
 
 /* ============ HERO ============ */
-.hero{position:relative;overflow:hidden;color:#fff;padding:20px;border:0;border-radius:var(--r-lg);
+.hero{position:relative;overflow:hidden;color:#fff;padding:22px;border:0;border-radius:var(--r-lg);
   background:
-    radial-gradient(120% 100% at 108% 112%,rgba(10,163,127,.55),rgba(10,163,127,0) 58%),
-    linear-gradient(135deg,#4b3dd4 0%,#6555e8 55%,#4336c4 100%);
-  box-shadow:0 14px 34px rgba(75,61,212,.28)}
+    radial-gradient(120% 100% at 108% 112%,rgba(15,163,127,.55),rgba(15,163,127,0) 58%),
+    linear-gradient(135deg,#4637C8 0%,#6555E8 55%,#3D30B4 100%);
+  box-shadow:0 16px 38px rgba(70,55,200,.26)}
 .hero:before,.hero:after{content:"";position:absolute;border-radius:50%;pointer-events:none;
-  background:radial-gradient(circle,rgba(255,255,255,.14),rgba(255,255,255,0) 70%)}
-.hero:before{width:240px;height:240px;right:-90px;top:-110px}
-.hero:after{width:190px;height:190px;left:-90px;bottom:-110px;opacity:.65}
+  background:radial-gradient(circle,rgba(255,255,255,.16),rgba(255,255,255,0) 70%)}
+.hero:before{width:250px;height:250px;right:-95px;top:-115px}
+.hero:after{width:190px;height:190px;left:-95px;bottom:-115px;opacity:.65}
 .hero>*{position:relative;z-index:1}
-.hero .shine{display:none}
-.hk{font-size:11.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;opacity:.9}
-.sub{opacity:.92;margin-top:8px;font-size:13px}
-.big{font-size:clamp(30px,9vw,38px);font-weight:800;letter-spacing:-.03em;line-height:1.12;margin:2px 0;font-variant-numeric:tabular-nums}
-.flow{display:flex;align-items:center;gap:8px;margin:10px 0 14px;font-size:13.5px;min-width:0}
-.flow b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:700}
-.av{width:28px;height:28px;border-radius:50%;background:var(--w2);display:grid;place-items:center;font-weight:800;flex:none;font-size:13px;border:1px solid var(--wl)}
+.hero.reveal{animation:heroIn var(--t-slow) var(--ease) both}
+@keyframes heroIn{from{opacity:0;transform:translateY(8px) scale(.99)}}
+.hero-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.hero .hk{font-size:11.5px;font-weight:700;letter-spacing:.07em;text-transform:none;opacity:.92}
+.status-chip{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:var(--pill);font-size:11.5px;font-weight:800;
+  background:rgba(255,255,255,.16);border:1px solid var(--wl);white-space:nowrap}
+.status-chip:before{content:"";width:7px;height:7px;border-radius:50%;background:#fff}
+.status-chip.ok{background:rgba(47,211,170,.22)}
+.status-chip.ok:before{background:#8BFFDD}
+.status-chip.warn{background:rgba(240,179,73,.22)}
+.status-chip.warn:before{background:#FFD58A}
+.sub{opacity:.92;margin-top:12px;font-size:13px}
+.big{font-size:clamp(32px,9vw,42px);font-weight:800;letter-spacing:-.035em;line-height:1.1;margin:2px 0 4px;font-variant-numeric:tabular-nums}
+.flow{display:flex;align-items:center;gap:9px;margin:10px 0 14px;font-size:13.5px;min-width:0}
+.flow b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:750}
+.av{width:30px;height:30px;border-radius:50%;background:var(--w2);display:grid;place-items:center;font-weight:800;flex:none;font-size:13px;border:1px solid var(--wl)}
 .ar{flex:1;height:2px;min-width:24px;border-radius:99px;position:relative;
-  background:linear-gradient(90deg,
-    rgba(255,255,255,.38) 0 44%,
-    rgba(255,255,255,.98) 50%,
-    rgba(255,255,255,.38) 56% 100%);
-  background-size:300% 100%;background-position:100% 0;
-  animation:arFlow 1.7s linear infinite}
+  background:linear-gradient(90deg,rgba(255,255,255,.34) 0 44%,rgba(255,255,255,.98) 50%,rgba(255,255,255,.34) 56% 100%);
+  background-size:300% 100%;background-position:100% 0;animation:arFlow 1.7s linear infinite}
 @keyframes arFlow{from{background-position:100% 0}to{background-position:0% 0}}
-.ar:after{content:"";position:absolute;right:-1px;top:-4px;border:5px solid transparent;border-left:8px solid rgba(255,255,255,.85);border-right:0;
+.ar:after{content:"";position:absolute;right:-1px;top:-4px;border:5px solid transparent;border-left:8px solid rgba(255,255,255,.88);border-right:0;
   animation:arTip 1.7s linear infinite}
 @keyframes arTip{0%,68%{transform:translateX(0);opacity:.85;filter:none}78%{transform:translateX(3px);opacity:1;filter:drop-shadow(0 0 4px rgba(255,255,255,.85))}88%,100%{transform:translateX(0);opacity:.85;filter:none}}
-.bar{height:6px;border-radius:99px;background:rgba(255,255,255,.24);overflow:hidden;margin-top:6px}
-.bar i{display:block;height:100%;background:rgba(255,255,255,.94);border-radius:99px;transition:width var(--t-slow) var(--ease)}
-.stat{display:flex;gap:8px;margin-top:12px}
+.bar{height:7px;border-radius:99px;background:rgba(255,255,255,.22);overflow:hidden;margin-top:8px}
+.bar i{display:block;height:100%;background:rgba(255,255,255,.95);border-radius:99px;transition:width var(--t-slow) var(--ease)}
+.split-row{display:flex;justify-content:space-between;gap:10px;margin-top:6px;font-size:11.5px;opacity:.92}
+.stat{display:flex;gap:8px;margin-top:14px}
 .stat div{flex:1;min-width:0;background:var(--w1);border:1px solid var(--wl);border-radius:var(--r-sm);padding:9px 11px}
-.stat small{display:block;opacity:.9;font-size:11.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stat small{display:block;opacity:.92;font-size:11.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .stat b{font-size:15px;font-variant-numeric:tabular-nums}
 .hb{display:flex;gap:8px;margin-top:14px}
-.hb button{flex:1;min-height:42px;background:var(--w2);color:#fff;border:1px solid var(--wl);box-shadow:none}
-.hb button.w1{background:#fff;color:#4a3bd4;border-color:#fff}
+.hb button{flex:1;min-height:44px;background:var(--w2);color:#fff;border:1px solid var(--wl);box-shadow:none}
+.hb button.w1{background:#fff;color:#4637C8;border-color:#fff}
 
 /* ============ FORM ============ */
 .row{display:flex;gap:10px;flex-wrap:wrap}
 .row>*{flex:1 1 130px;min-width:0}
-label{display:block;font-size:12px;font-weight:600;color:var(--mut);margin:10px 0 5px}
-input,select{width:100%;min-height:44px;padding:10px 12px;border:1px solid var(--ln);border-radius:var(--r-sm);background:var(--fld);color:var(--tx);font:inherit;transition:border-color var(--t-fast),box-shadow var(--t-fast),background var(--t-fast)}
+label{display:block;font-size:12.5px;font-weight:650;color:var(--mut);margin:10px 0 5px}
+input,select{width:100%;min-height:44px;padding:10px 12px;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--field);color:var(--ink);font:inherit;transition:border-color var(--t-fast),box-shadow var(--t-fast),background var(--t-fast)}
 input:focus,select:focus{outline:0;border-color:var(--a);background:var(--card);box-shadow:0 0 0 3px var(--a-ring)}
 input[type=checkbox]{width:auto;min-height:0;accent-color:var(--a);padding:0}
-button{position:relative;border:0;border-radius:var(--r-sm);min-height:44px;padding:11px 16px;font:inherit;font-weight:700;cursor:pointer;color:#fff;background:linear-gradient(135deg,var(--btn1),var(--btn2));box-shadow:0 6px 16px rgba(91,76,224,.20);transition:transform var(--t-fast) var(--ease),filter var(--t-fast),opacity var(--t-fast)}
+button{position:relative;border:0;border-radius:var(--r-sm);min-height:44px;padding:11px 16px;font:inherit;font-weight:750;cursor:pointer;color:#fff;background:linear-gradient(135deg,var(--btn1),var(--btn2));box-shadow:0 6px 16px rgba(91,76,224,.18);transition:transform var(--t-fast) var(--ease),filter var(--t-fast),opacity var(--t-fast)}
 button:active{transform:scale(.975)}
 button:disabled{opacity:.55;cursor:default}
-button.g{background:var(--fld);color:var(--tx);border:1px solid var(--ln);box-shadow:none}
-.btn-s{min-height:34px;padding:6px 12px;font-size:13px;border-radius:var(--pill);font-weight:700}
+button.g{background:var(--field);color:var(--ink);border:1px solid var(--line);box-shadow:none}
+.btn-s{min-height:34px;padding:6px 12px;font-size:13px;border-radius:var(--pill);font-weight:750}
 .x{min-height:34px;width:34px;padding:0;background:none;border:0;box-shadow:none;color:var(--mut);font-size:15px;border-radius:var(--r-sm)}
 :focus-visible{outline:2px solid var(--a);outline-offset:2px}
 input:focus-visible,select:focus-visible{outline:0}
 
 /* ============ LISTS ============ */
-.it{display:flex;align-items:center;gap:11px;padding:11px 0;border-bottom:1px solid var(--ln);
+.it{display:flex;align-items:center;gap:11px;padding:11px 0;border-bottom:1px solid var(--line);
   transition:opacity var(--t) var(--ease),transform var(--t) var(--ease),padding var(--t) var(--ease),border-color var(--t) var(--ease),max-height var(--t) var(--ease)}
 .it:last-child{border-bottom:0}
 .it.new{animation:newRow .4s var(--ease)}
-@keyframes newRow{from{opacity:.4;background:var(--a-weak)}}
+@keyframes newRow{from{opacity:.35;background:var(--a-weak)}}
 .it.out{opacity:0;transform:translateX(16px);max-height:0!important;padding-top:0;padding-bottom:0;border-color:transparent;overflow:hidden}
-.dot{width:36px;height:36px;border-radius:12px;display:grid;place-items:center;color:#fff;font-weight:800;flex:none;background:var(--c);font-size:14px}
+.dot{width:38px;height:38px;border-radius:13px;display:grid;place-items:center;color:#fff;font-weight:800;flex:none;background:var(--c);font-size:14px;box-shadow:inset 0 -2px 0 rgba(0,0,0,.08)}
 .m{flex:1;min-width:0;cursor:pointer}
 .m b{display:block;font-size:14.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .m span{display:block;font-size:12px;color:var(--mut);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.pill{display:inline-block;font-style:normal;font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:var(--pill);margin-top:4px;color:var(--c);background:color-mix(in srgb,var(--c) 12%,transparent)}
+.tx-dir{color:var(--c);font-weight:700}
+.pill{display:inline-block;font-style:normal;font-size:10.5px;font-weight:750;padding:2px 8px;border-radius:var(--pill);margin-top:4px;color:var(--c);background:color-mix(in srgb,var(--c) 12%,transparent)}
 .amt{text-align:right;font-weight:800;font-variant-numeric:tabular-nums;white-space:nowrap;font-size:14.5px}
-.amt span{display:block;font-size:11.5px;font-weight:600;color:var(--c)}
+.amt span{display:block;font-size:11.5px;font-weight:650;color:var(--c)}
 .hint{font-size:12px;color:var(--mut);margin-top:6px;line-height:1.5}
-.hint b{color:var(--tx)}
-.gh{display:flex;justify-content:space-between;gap:10px;padding:12px 0 4px;font-size:11px;color:var(--mut);font-weight:800;text-transform:uppercase;letter-spacing:.05em}
+.hint b{color:var(--ink)}
+.gh{display:flex;justify-content:space-between;gap:10px;padding:12px 0 4px;font-size:11px;color:var(--mut);font-weight:800;letter-spacing:.03em}
 .gh:first-child{padding-top:2px}
-.gh span{color:var(--tx);font-weight:800;text-transform:none;letter-spacing:0;font-size:12px}
-.empty{padding:26px 14px;text-align:center;color:var(--mut);font-size:13.5px;border:1px dashed var(--ln);border-radius:var(--r);background:var(--fld);margin:8px 0}
+.gh span{color:var(--ink);font-weight:800;letter-spacing:0;font-size:12px;font-variant-numeric:tabular-nums}
+.empty{padding:22px 14px;text-align:center;color:var(--mut);font-size:13.5px;border:1px dashed var(--line);border-radius:var(--r);background:var(--field);margin:8px 0}
+.empty b{display:block;color:var(--ink);font-size:14.5px;margin-bottom:4px}
+.empty button{margin-top:10px}
+.stat-row{display:flex;align-items:center;gap:9px;margin:7px 0}
+.stat-label{flex:0 0 86px;font-size:12px;color:var(--mut);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.stat-track{flex:1;height:9px;border-radius:99px;background:var(--line);overflow:hidden}
+.stat-fill{display:block;height:100%;border-radius:99px;background:var(--a)}
+.stat-fill.cur{background:linear-gradient(90deg,var(--btn1),var(--b))}
+.stat-amount{font-size:12px;white-space:nowrap;font-variant-numeric:tabular-nums}
 
 /* ============ TOAST / VIEWS / FAB ============ */
-#toast{display:none;position:fixed;left:12px;right:12px;bottom:calc(98px + env(safe-area-inset-bottom,0px));z-index:60;background:#1b2038;color:#fff;padding:12px 15px;border-radius:var(--r);box-shadow:0 12px 30px rgba(10,14,40,.28);max-width:696px;margin:0 auto;font-weight:600;font-size:14px;animation:toastIn var(--t) var(--ease)}
+#toast{display:none;position:fixed;left:12px;right:12px;bottom:calc(100px + env(safe-area-inset-bottom,0px));z-index:60;background:#1B2038;color:#fff;padding:12px 15px;border-radius:var(--r);box-shadow:0 14px 34px rgba(10,14,40,.3);max-width:696px;margin:0 auto;font-weight:650;font-size:14px;animation:toastIn var(--t) var(--ease)}
 @keyframes toastIn{from{opacity:0;transform:translateY(10px)}}
-#toast .ta{float:right;margin-left:12px;min-height:0;background:none;border:0;box-shadow:none;color:#c9c2ff;padding:0 4px;font-weight:800}
+#toast .ta{float:right;margin-left:12px;min-height:0;background:none;border:0;box-shadow:none;color:#C9C2FF;padding:0 4px;font-weight:800}
 .v{display:none}
 .v.on{display:block;animation:viewIn var(--t) var(--ease) both}
 @keyframes viewIn{from{opacity:0;transform:translateY(6px)}}
-#fab{position:fixed;right:16px;bottom:calc(88px + env(safe-area-inset-bottom,0px));z-index:11;border-radius:var(--pill);padding:13px 20px;font-size:14px;box-shadow:0 10px 24px rgba(91,76,224,.30)}
+#fab{position:fixed;right:16px;bottom:calc(88px + env(safe-area-inset-bottom,0px));z-index:11;border-radius:var(--pill);padding:13px 20px;font-size:14px;box-shadow:0 12px 26px rgba(91,76,224,.32)}
 body:not([data-tab=home]):not([data-tab=chi]) #fab{display:none}
 
 /* ============ SHEETS ============ */
-#sheet,#msheet{position:fixed;z-index:20;display:none;align-items:flex-end;background:rgba(12,15,38,.42);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px)}
+#sheet,#msheet{position:fixed;z-index:20;display:none;align-items:flex-end;background:rgba(12,15,38,.46);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px)}
 #msheet{z-index:25}
 #sheet.on,#msheet.on{display:flex;animation:backdropIn .18s ease both}
 @keyframes backdropIn{from{opacity:0}}
-#sheet .card,#msheet .card{width:100%;max-width:720px;margin:0 auto;border-radius:var(--r-lg) var(--r-lg) 0 0;max-height:92%;overflow:auto;padding:8px 18px calc(18px + env(safe-area-inset-bottom,0px));box-shadow:0 -10px 40px rgba(10,14,40,.22);animation:sheetIn var(--t-slow) var(--ease) both}
+#sheet .card,#msheet .card{width:100%;max-width:720px;margin:0 auto;border-radius:var(--r-lg) var(--r-lg) 0 0;max-height:92%;overflow:auto;padding:8px 18px calc(18px + env(safe-area-inset-bottom,0px));box-shadow:0 -12px 42px rgba(10,14,40,.24);animation:sheetIn var(--t-slow) var(--ease) both}
 #msheet .card{max-height:88%}
 @keyframes sheetIn{from{transform:translateY(28px);opacity:.4}}
-#sheet .card:before,#msheet .card:before{content:"";display:block;width:36px;height:4px;border-radius:99px;background:var(--ln);margin:2px auto 12px}
-#ft,#mt{display:block;font-size:17px;font-weight:800;letter-spacing:-.01em;margin-bottom:4px}
+#sheet .card:before,#msheet .card:before{content:"";display:block;width:38px;height:4px;border-radius:99px;background:var(--line);margin:2px auto 12px}
+#ft,#mt{display:block;font-size:17px;font-weight:800;letter-spacing:-.015em;margin-bottom:4px}
 #sheet .card,#msheet .card{overscroll-behavior:contain}
 #sheet,#msheet{inset:auto;left:0;right:0;top:var(--vt,0px);height:var(--vh,100%)}
 html.lock,html.lock body{overflow:hidden}
 
 /* ============ NAV ============ */
-#nav{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(10px + env(safe-area-inset-bottom,0px));z-index:10;width:calc(100% - 24px);max-width:520px;display:grid;grid-template-columns:repeat(5,1fr);padding:5px;border-radius:var(--r-lg);background:color-mix(in srgb,var(--card) 88%,transparent);-webkit-backdrop-filter:blur(18px) saturate(1.5);backdrop-filter:blur(18px) saturate(1.5);border:1px solid var(--ln);box-shadow:0 10px 30px rgba(40,50,120,.14)}
+#nav{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(10px + env(safe-area-inset-bottom,0px));z-index:10;width:calc(100% - 24px);max-width:520px;display:grid;grid-template-columns:repeat(5,1fr);padding:5px;border-radius:var(--r-lg);background:color-mix(in srgb,var(--card) 90%,transparent);-webkit-backdrop-filter:blur(18px) saturate(1.5);backdrop-filter:blur(18px) saturate(1.5);border:1px solid var(--line);box-shadow:0 12px 32px rgba(40,50,120,.16)}
 #nav i{position:absolute;top:5px;bottom:5px;left:5px;width:calc((100% - 10px)/5);border-radius:var(--r);background:var(--a-weak);transform:translateX(calc(var(--i,0)*100%));transition:transform var(--t-slow) var(--ease)}
 #nav button{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:0;padding:8px 2px 7px;background:none;border:0;box-shadow:none;color:var(--mut);font-size:10.5px;font-weight:700;border-radius:var(--r);transition:color var(--t)}
 #nav button.on{color:var(--a)}
@@ -183,71 +204,77 @@ html.lock,html.lock body{overflow:hidden}
 #nav svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 
 /* ============ GATE ============ */
-#gate{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;padding:20px;overflow:auto;background:linear-gradient(150deg,#5b4ce0 0%,#7d6df2 52%,#0fb28a 130%)}
+#gate{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;padding:20px;overflow:auto;background:linear-gradient(150deg,#5B4CE0 0%,#7D6DF2 52%,#0FA37F 130%)}
 #gate[hidden]{display:none}
-.gbox{width:100%;max-width:400px;background:var(--card);color:var(--tx);border-radius:var(--r-lg);padding:24px 22px;box-shadow:var(--sh-lg);animation:viewIn var(--t) var(--ease) both}
-.gl{font-size:11.5px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--a)}
-.gbox h2{margin:6px 0;font-size:21px;letter-spacing:-.02em}
+.gbox{width:100%;max-width:400px;background:var(--card);color:var(--ink);border-radius:var(--r-lg);padding:24px 22px;box-shadow:var(--sh-lg);animation:viewIn var(--t) var(--ease) both}
+.gl{font-size:11.5px;font-weight:800;letter-spacing:.08em;text-transform:none;color:var(--a)}
+.gbox h2{margin:6px 0;font-size:21px;letter-spacing:-.025em}
 .gbox p{margin:0 0 10px;color:var(--mut);font-size:13.5px;line-height:1.5}
 .gor{display:flex;align-items:center;gap:10px;color:var(--mut);font-size:12px;margin:14px 0}
-.gor:before,.gor:after{content:"";flex:1;height:1px;background:var(--ln)}
-#gcode{font-size:20px;font-weight:700;letter-spacing:.12em;text-align:center}
+.gor:before,.gor:after{content:"";flex:1;height:1px;background:var(--line)}
+#gcode{font-size:20px;font-weight:750;letter-spacing:.12em;text-align:center}
 
 /* ============ SEGMENTED / CHIPS ============ */
 .seg{display:flex;flex-wrap:wrap;gap:6px}
-.seg button{min-height:36px;padding:7px 13px;font-size:13px;border-radius:var(--pill);background:var(--fld);color:var(--mut);border:1px solid var(--ln);box-shadow:none}
+.seg button{min-height:36px;padding:7px 13px;font-size:13px;border-radius:var(--pill);background:var(--field);color:var(--mut);border:1px solid var(--line);box-shadow:none}
 .seg button.on{background:linear-gradient(135deg,var(--btn1),var(--btn2));color:#fff;border-color:transparent;box-shadow:0 4px 12px var(--a-ring)}
 #quick{display:flex;gap:7px;overflow-x:auto;padding:2px 0 8px;scrollbar-width:none}
 #quick::-webkit-scrollbar{display:none}
 .qchip{flex:none;min-height:34px;padding:6px 13px;font-size:12.5px;border-radius:var(--pill)}
+.qchip.on{background:var(--a-weak);color:var(--a);border-color:color-mix(in srgb,var(--a) 30%,transparent);box-shadow:none}
 
 /* ============ CHORES / MISC ============ */
-.cw{border-bottom:1px solid var(--ln);padding-bottom:6px;margin-bottom:6px}
+.cw{border-bottom:1px solid var(--line);padding-bottom:8px;margin-bottom:8px}
 .cw:last-child{border-bottom:0;margin-bottom:0;padding-bottom:0}
 .cw .it{border-bottom:0;padding-bottom:4px}
-.ca{display:flex;gap:8px;margin:0 0 10px 47px;flex-wrap:wrap}
+.chore-face{width:44px;height:44px;border-radius:15px;font-size:16px}
+.cycle-tag,.rem-icon,.tag{display:inline-flex;align-items:center;gap:5px;padding:2px 8px;border-radius:var(--pill);font-size:11px;font-weight:750;background:var(--a-weak);color:var(--a)}
+.rem-icon{background:color-mix(in srgb,var(--mint) 12%,transparent);color:var(--mint)}
+.tag.amber{background:color-mix(in srgb,var(--amber) 14%,transparent);color:var(--amber)}
+.ca{display:flex;gap:8px;margin:0 0 10px 54px;flex-wrap:wrap}
 .ca button{min-height:32px;padding:5px 11px;font-size:12px;border-radius:var(--pill)}
 .cst{font-size:11.5px;color:var(--mut)}
-.codebox{font-family:ui-monospace,Consolas,monospace;font-weight:700;font-size:13px;padding:8px 11px;border-radius:var(--r-sm);background:var(--fld);border:1px solid var(--ln);word-break:break-all}
+.codebox{font-family:ui-monospace,Consolas,monospace;font-weight:700;font-size:13px;padding:9px 11px;border-radius:var(--r-sm);background:var(--field);border:1px solid var(--line);word-break:break-all}
 #rc{cursor:pointer}
+.inv-code{font-size:38px;font-weight:800;letter-spacing:.2em;text-align:center;color:var(--a);font-variant-numeric:tabular-nums}
+.dot-status{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--mint);margin-right:7px}
+.dot-status.bad{background:var(--rose)}
 .cf{position:fixed;width:8px;height:12px;border-radius:2px;z-index:70;pointer-events:none}
 
 @media(hover:hover){
   button:hover{filter:brightness(1.04)}
   .it:hover{background:color-mix(in srgb,var(--a) 4%,transparent)}
   #fab:hover{transform:translateY(-1px)}
-  .x:hover{color:#e17055}
+  .x:hover{color:var(--rose)}
 }
 /* ============ LAPTOP / WIDE SCREEN ============ */
 @media(min-width:900px){
   .w{margin:0 0 0 250px;max-width:none;padding:28px 34px 92px}
   .top{margin-bottom:18px}
   h1{font-size:26px}
-  #cfgb{width:42px;height:42px;min-height:42px}
+  #cfgb{width:44px;height:44px;min-height:44px}
 
-  /* thanh điều hướng dọc */
   #nav{position:fixed;left:0;top:0;bottom:0;right:auto;width:250px;max-width:none;transform:none;
     display:grid;grid-template-columns:1fr;grid-template-rows:repeat(5,48px);gap:0;
-    padding:78px 12px 18px;border:0;border-right:1px solid var(--ln);border-radius:0;
+    padding:78px 12px 18px;border:0;border-right:1px solid var(--line);border-radius:0;
     background:var(--card);-webkit-backdrop-filter:none;backdrop-filter:none;
     box-shadow:2px 0 24px rgba(30,36,90,.08)}
-  #nav:before{content:"Tính tiền trọ";position:absolute;left:21px;top:23px;font-size:18px;font-weight:800;letter-spacing:-.02em;color:var(--tx)}
+  #nav:before{content:"Tính tiền trọ";position:absolute;left:21px;top:23px;font-size:18px;font-weight:800;letter-spacing:-.025em;color:var(--ink)}
   #nav:after{content:"Giao diện máy tính";position:absolute;left:22px;top:50px;font-size:11px;font-weight:600;color:var(--mut)}
-  #nav i{top:78px;bottom:auto;left:12px;right:12px;width:auto;height:48px;border-radius:12px;transform:translateY(calc(var(--i,0)*100%))}
-  #nav button{flex-direction:row;justify-content:flex-start;gap:12px;height:48px;min-height:0;padding:0 14px;border-radius:12px;font-size:13.5px}
+  #nav i{top:78px;bottom:auto;left:12px;right:12px;width:auto;height:48px;border-radius:var(--r);transform:translateY(calc(var(--i,0)*100%))}
+  #nav button{flex-direction:row;justify-content:flex-start;gap:12px;height:48px;min-height:0;padding:0 14px;border-radius:var(--r);font-size:13.5px}
   #nav svg{width:22px;height:22px}
 
-  /* nội dung 2 cột */
   #v-home.on{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(300px,.9fr);gap:16px;align-items:start}
   #v-home.on .card{margin:0}
-  #v-home .hero{grid-column:1;grid-row:1/3;min-height:300px}
+  #v-home .hero{grid-column:1;grid-row:1/3;min-height:320px}
   #v-home #scard{grid-column:2;grid-row:1}
   #v-home .card:nth-child(3){grid-column:2;grid-row:2}
   #v-home #tcard{grid-column:1;grid-row:3}
   #v-home #hcard{grid-column:2;grid-row:3}
   .hero{padding:26px 28px}
-  .big{font-size:clamp(38px,4vw,46px)}
-  .flow{max-width:440px}
+  .big{font-size:clamp(38px,4vw,48px)}
+  .flow{max-width:460px}
   .hb button{min-height:46px}
   #v-chi.on,#v-nhac.on{max-width:1000px}
   #v-truc.on{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(300px,.75fr);gap:16px;align-items:start}
@@ -255,8 +282,7 @@ html.lock,html.lock body{overflow:hidden}
   #v-cai.on{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:start}
   #v-cai #reset{grid-column:1/-1}
 
-  /* hộp thoại giữa màn hình, không trượt từ dưới */
-  #sheet,#msheet{inset:0;height:auto;align-items:center;justify-content:center;background:rgba(12,15,38,.52)}
+  #sheet,#msheet{inset:0;height:auto;align-items:center;justify-content:center;background:rgba(12,15,38,.54)}
   #sheet .card,#msheet .card{width:min(560px,calc(100vw - 48px));max-width:560px;max-height:88vh;padding:20px 24px 22px;border-radius:var(--r-lg);box-shadow:var(--sh-lg);animation:modalIn var(--t-slow) var(--ease) both}
   #sheet .card:before,#msheet .card:before{display:none}
   @keyframes modalIn{from{opacity:0;transform:translateY(12px) scale(.985)}}
@@ -265,9 +291,10 @@ html.lock,html.lock body{overflow:hidden}
   #gate .gbox{max-width:440px}
 }
 @media(prefers-reduced-motion:reduce){
-  *,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+  *,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
 }
-</style></head><body>
+</style>
+</head><body>
 <div class="bg" aria-hidden="true"><i></i><i></i><i></i></div>
 <div class="w">
 <div id="toast"></div>
@@ -295,7 +322,7 @@ html.lock,html.lock body{overflow:hidden}
 <div><label>Người đầu tiên</label><select id="cwho"></select></div>
 <div><label>Giờ nhắc</label><input id="ctm" type="time" value="07:00"></div>
 </div>
-<label style="display:flex;gap:8px;align-items:center;margin-top:12px;font-size:14px;color:var(--tx)"><input id="cnf" type="checkbox" checked style="width:auto;padding:0"> Nhắc khi tới lượt</label>
+<label style="display:flex;gap:8px;align-items:center;margin-top:12px;font-size:14px;color:var(--ink)"><input id="cnf" type="checkbox" checked style="width:auto;padding:0"> Nhắc khi tới lượt</label>
 <button id="cadd" style="margin-top:10px">Thêm việc</button>
 <div class="hint">Hai người luân phiên nhau theo chu kỳ. Khi đến lượt, thông báo gửi tới cả hai máy kèm tên người trực.</div></div>
 </section>
@@ -309,28 +336,28 @@ html.lock,html.lock body{overflow:hidden}
 <div><label id="rvl">Ngày trong tháng</label><select id="rvm"></select><input id="rvd" type="date" hidden></div>
 <div><label>Giờ</label><input id="rtm" type="time" value="08:00"></div>
 </div>
-<label style="display:flex;gap:8px;align-items:center;margin-top:12px;font-size:14px;color:var(--tx)"><input id="rbal" type="checkbox" style="width:auto;padding:0"> Kèm số tiền cần chuyển</label>
+<label style="display:flex;gap:8px;align-items:center;margin-top:12px;font-size:14px;color:var(--ink)"><input id="rbal" type="checkbox" style="width:auto;padding:0"> Kèm số tiền cần chuyển</label>
 <button id="radd" style="margin-top:10px">Thêm nhắc hẹn</button>
 <div class="hint">Nhắc hẹn gửi tới cả hai máy qua thông báo đẩy, sai lệch tối đa khoảng 10 phút. Cần bật thông báo trên từng máy.</div></div>
 </section>
 
 <section class="v" id="v-cai">
-<div class="card"><b>Kỳ và tên</b>
+<div class="card"><b>Kỳ và tên</b><span class="card-sub">Đặt tên kỳ và hai người trong phòng.</span>
 <div class="row">
 <div><label>Tháng / kỳ</label><input id="month"></div>
 <div><label>Người 1</label><input id="n0"></div>
 <div><label>Người 2</label><input id="n1"></div>
 </div></div>
-<div class="card" id="cfg"><b>Phòng</b>
+<div class="card" id="cfg"><b>Phòng</b><span class="card-sub">Giữ mã phòng để vào lại trên máy khác.</span>
 <div id="roomOn" hidden>
-<div class="hint">Mã phòng (bấm để sao chép) — dùng để vào phòng trên máy khác:</div><div id="rc" title="Bấm để sao chép" class="codebox" style="margin:4px 0 10px"></div><div class="hint">Bấm Mời để lấy mã 6 số cho bạn cùng trọ.</div>
-<div id="invbox" hidden style="text-align:center;margin:14px 0"><div id="ic" style="font-size:38px;font-weight:800;letter-spacing:.22em"></div><div class="hint" id="iexp"></div></div>
+<div class="hint">Mã phòng — bấm để sao chép và gửi cho người cùng trọ:</div><div id="rc" title="Bấm để sao chép" class="codebox" style="margin:4px 0 10px"></div><div class="hint">Hoặc bấm Mời để lấy mã 6 số, hiệu lực 15 phút.</div>
+<div id="invbox" hidden style="text-align:center;margin:14px 0"><div id="ic" class="inv-code"></div><div class="hint" id="iexp"></div></div>
 <div class="row"><button id="inv">Mời người khác</button><button class="g" id="notif">Bật thông báo</button><button class="g" id="leave">Rời phòng</button></div></div></div>
-<div class="card"><b>Thông báo &amp; nhắc hẹn</b>
+<div class="card"><b>Thông báo &amp; nhắc hẹn</b><span class="card-sub">Kiểm tra máy chủ và gửi thử trước khi tin dùng.</span>
 <div class="hint" id="diag">Bấm kiểm tra để xem máy chủ đã bật nhắc hẹn và thông báo đẩy chưa.</div>
 <div class="row"><button class="g btn-s" id="diagb">Kiểm tra</button><button class="g btn-s" id="testb">Gửi thử thông báo</button></div>
 </div>
-<div class="card" id="vercard"><b>Phiên bản</b>
+<div class="card" id="vercard"><b>Phiên bản</b><span class="card-sub">Bản cài trên máy và bản mới nhất trên mạng.</span>
 <div style="display:flex;align-items:center;gap:10px;margin:6px 0;flex-wrap:wrap">
 <span id="vcur" class="codebox"></span>
 <button class="g btn-s" id="vcheck">Kiểm tra cập nhật</button>
@@ -338,7 +365,7 @@ html.lock,html.lock body{overflow:hidden}
 </div>
 <div class="hint" id="vinfo">Bản đang chạy trên máy này.</div>
 </div>
-<button class="g" id="reset" style="width:100%">Xoá hết khoản chi</button>
+<button class="g" id="reset" style="width:100%">Xoá hết khoản chi</button><div class="hint">Chỉ xoá các khoản của kỳ hiện tại, không xoá kỳ đã chốt.</div>
 </section>
 </div>
 
@@ -373,7 +400,7 @@ html.lock,html.lock body{overflow:hidden}
 <button id="gjoin" style="width:100%;margin-top:14px">Vào phòng</button>
 <div class="gor">hoặc</div>
 <button class="g" id="gmk" style="width:100%">Tạo phòng mới</button>
-<div id="gerr" class="hint" style="color:#e17055;min-height:18px;margin-top:10px"></div>
+<div id="gerr" class="hint" style="color:var(--rose);min-height:18px;margin-top:10px"></div>
 </div></div>
 <button id="fab">+ Thêm khoản chi</button>
 <nav id="nav" style="--i:0"><i></i><button class="on" data-t="home"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="2"/><rect x="14" y="3" width="7" height="5" rx="2"/><rect x="14" y="12" width="7" height="9" rx="2"/><rect x="3" y="16" width="7" height="5" rx="2"/></svg><span>Tổng quan</span></button><button data-t="chi"><svg viewBox="0 0 24 24"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6"/></svg><span>Khoản chi</span></button><button data-t="truc"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="5"/><path d="M9 12l2.2 2.2L15.5 10"/></svg><span>Trực nhật</span></button><button data-t="nhac"><svg viewBox="0 0 24 24"><path d="M6 16v-5a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 21h4"/></svg><span>Nhắc hẹn</span></button><button data-t="cai"><svg viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></svg><span>Cài đặt</span></button></nav>
@@ -387,7 +414,7 @@ function rfill(){const t=$('rty').value;$('rvm').hidden=t=='once';$('rvd').hidde
  $('rvl').textContent=t=='month'?'Ngày trong tháng':t=='week'?'Thứ':'Ngày';
  if(t!='once')$('rvm').innerHTML=t=='month'?Array.from({length:31},(_,i)=>`<option value="${i+1}">Ngày ${i+1}</option>`).join(''):WD.map((w,i)=>`<option value="${i}">${w}</option>`).join('')}
 function rrender(){const L=(S.rem||[]).filter(r=>r.on!==0);$('rcnt').textContent=L.length?L.length+' lịch':'';
- $('rlist').innerHTML=L.map(r=>`<div class="it" style="--c:var(--a)"><div class="m" style="cursor:pointer" onclick="redit(${r.id})"><b>${String(r.title).replace(/[&<>"]/g,c=>'&#'+c.charCodeAt(0)+';')}</b><span>${r.type=='month'?'Ngày '+r.val+' hằng tháng':r.type=='week'?WD[r.val]+' hằng tuần':String(r.val).split('-').reverse().join('/')} · ${r.time}${r.bal?' · kèm số tiền':''}</span></div>${r.type=='once'?`<button class="x" title="Hoãn 1 ngày" onclick="rsnooze(${r.id})">⏰</button>`:''}<button class="x" title="Sửa" onclick="redit(${r.id})">✎</button><button class="x" title="Xoá" onclick="rdel(${r.id})">✕</button></div>`).join('')}
+ $('rlist').innerHTML=L.map(r=>`<div class="it" style="--c:var(--a)"><div class="m" style="cursor:pointer" onclick="redit(${r.id})"><b>${String(r.title).replace(/[&<>"]/g,c=>'&#'+c.charCodeAt(0)+';')}</b><span><span class="rem-icon">${r.type=='month'?'📅':r.type=='week'?'🔁':'1×'}</span> ${r.type=='month'?'Ngày '+r.val+' hằng tháng':r.type=='week'?WD[r.val]+' hằng tuần':String(r.val).split('-').reverse().join('/')} · ${r.time}${r.bal?' <span class="tag amber">kèm số nợ</span>':''}</span></div>${r.type=='once'?`<button class="x" title="Hoãn 1 ngày" onclick="rsnooze(${r.id})">⏰</button>`:''}<button class="x" title="Sửa" onclick="redit(${r.id})">✎</button><button class="x" title="Xoá" onclick="rdel(${r.id})">✕</button></div>`).join('')||'<div class="empty"><b>Chưa có nhắc hẹn</b>Thêm lịch ở bên dưới để không quên đóng tiền trọ.</div>'}
 const remVal=(ty,val)=>ty=='once'?`<input id="edv" type="date" value="${esc(val||'')}">`
  :ty=='week'?`<select id="edv">${WD.map((w,i)=>`<option value="${i}"${+val===i?' selected':''}>${w}</option>`).join('')}</select>`
  :`<select id="edv">${Array.from({length:31},(_,i)=>`<option value="${i+1}"${+val===i+1?' selected':''}>Ngày ${i+1}</option>`).join('')}</select>`;
@@ -396,7 +423,7 @@ function redit(id){const r=(S.rem||[]).find(x=>x.id==id);if(!r)return;
  <div class="row"><div><label>Lặp</label><select id="edty"><option value="month"${r.type=='month'?' selected':''}>Hằng tháng</option><option value="week"${r.type=='week'?' selected':''}>Hằng tuần</option><option value="once"${r.type=='once'?' selected':''}>Một lần</option></select></div>
  <div><label id="edvl">${r.type=='month'?'Ngày trong tháng':r.type=='week'?'Thứ':'Ngày'}</label><span id="edvw">${remVal(r.type,r.val)}</span></div>
  <div><label>Giờ</label><input id="edtm" type="time" value="${esc(r.time)}"></div></div>
- <label style="display:flex;gap:8px;align-items:center;margin-top:12px;font-size:14px;color:var(--tx)"><input id="edbal" type="checkbox"${r.bal?' checked':''} style="width:auto;padding:0"> Kèm số tiền cần chuyển</label>`,'Lưu',()=>{
+ <label style="display:flex;gap:8px;align-items:center;margin-top:12px;font-size:14px;color:var(--ink)"><input id="edbal" type="checkbox"${r.bal?' checked':''} style="width:auto;padding:0"> Kèm số tiền cần chuyển</label>`,'Lưu',()=>{
   const t=$('edt').value.trim(),t2=$('edty').value,v=$('edv').value;
   if(!t||!v){toast('Nhập nội dung và ngày nhắc');return false}
   const nr={id:r.id,title:t,type:t2,val:v,time:$('edtm').value||'08:00',bal:$('edbal').checked?1:0,on:1};
@@ -427,14 +454,14 @@ function closeSheet(){$('sheet').classList.remove('on');lockUI();if(editing){cle
 $('sheet').onclick=e=>{if(e.target===$('sheet'))closeSheet()};$('close').onclick=closeSheet;
 $('fab').onclick=()=>{clear();const d=new Date();$('date').value=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');preview();openSheet()};
 function recent(){const N=S.names;
- $('recent').innerHTML=S.items.slice(-4).reverse().map(it=>`<div class="it" style="--c:${it.payer?'var(--b)':'var(--a)'}"><span class="dot">${esc((N[it.payer]||'?').trim().split(' ').pop()[0])}</span><div class="m"><b>${esc(it.name||'(chưa đặt tên)')}</b><span>${it.mode=='pay'?esc(N[it.payer])+' → '+esc(N[1-it.payer]):esc(N[it.payer])+' chi'}</span></div><div class="amt">${fmt(it.total)}<span>${it.mode=='pay'?'đã chuyển':esc(N[1-it.payer])+' nợ '+fmt(share(it))}</span></div></div>`).join('')||'<div class="hint">Chưa có khoản nào.</div>'}
+ $('recent').innerHTML=S.items.slice(-4).reverse().map(it=>`<div class="it" style="--c:${it.mode=='pay'?'var(--mint)':it.payer?'var(--b)':'var(--a)'}"><span class="dot">${esc((N[it.payer]||'?').trim().split(' ').pop()[0])}</span><div class="m"><b>${esc(it.name||'(chưa đặt tên)')}</b><span>${it.mode=='pay'?esc(N[it.payer])+' → '+esc(N[1-it.payer]):esc(N[it.payer])+' chi'}</span></div><div class="amt">${fmt(it.total)}<span>${it.mode=='pay'?'đã chuyển':esc(N[1-it.payer])+' nợ '+fmt(share(it))}</span></div></div>`).join('')||'<div class="hint">Chưa có khoản nào — bấm + để bắt đầu.</div>'}
 const lockUI=()=>document.documentElement.classList.toggle('lock',$('sheet').classList.contains('on')||$('msheet').classList.contains('on')||!$('gate').hidden);
 const vv=window.visualViewport;
 function fitSheets(){if(!vv)return;const s=document.documentElement.style;s.setProperty('--vh',vv.height+'px');s.setProperty('--vt',vv.offsetTop+'px')}
 if(vv){vv.addEventListener('resize',fitSheets);vv.addEventListener('scroll',fitSheets);fitSheets()}
-const shown=new Set();let celebrate=false,lastAmt=0,lastO=[0,0],lastW=0,firstApply=true;
+const shown=new Set();let celebrate=false,lastAmt=0,lastO=[0,0],lastW=0,firstApply=true,heroRevealed=false;
 const calm=()=>window.matchMedia&&matchMedia('(prefers-reduced-motion:reduce)').matches;
-function confetti(){if(calm()||!document.body.animate)return;const r=$('hero').getBoundingClientRect(),cs=['#6c5ce7','#00b894','#ffc107','#ff6b81','#74b9ff'];
+function confetti(){if(calm()||!document.body.animate)return;const r=$('hero').getBoundingClientRect(),cs=['#6c5ce7','var(--mint)','#ffc107','#ff6b81','#74b9ff'];
  for(let i=0;i<20;i++){const e=document.createElement('i');e.className='cf';e.style.cssText='left:'+(r.left+r.width/2)+'px;top:'+(r.top+r.height/2)+'px;background:'+cs[i%5];document.body.appendChild(e);
   const a=Math.random()*Math.PI*2,d=90+Math.random()*170;
   e.animate([{transform:'translate(0,0) rotate(0)',opacity:1},{transform:'translate('+Math.cos(a)*d+'px,'+(Math.sin(a)*d+110)+'px) rotate('+(Math.random()*360-180)+'deg)',opacity:0}],{duration:850+Math.random()*450,easing:'cubic-bezier(.15,.7,.3,1)'}).onfinish=()=>e.remove()}}
@@ -472,7 +499,7 @@ async function viewHist(pid){const x=(S.hist||[]).find(h=>h.pid===pid);if(!x)ret
  openMini(x.label,'<div class="hint">Đang tải…</div>',null,null);
  try{const r=await call('periodItems',{pid});if(r.error)throw new Error(r.error);
   const its=r.detail.items;
-  $('mb').innerHTML=(its.map(it=>`<div class="it" style="--c:${it.payer?'var(--b)':'var(--a)'}"><div class="m" style="cursor:default"><b>${esc(it.name||'(chưa đặt tên)')}</b><span>${it.mode=='pay'?esc(x.names[it.payer])+' → '+esc(x.names[1-it.payer]):esc(x.names[it.payer])+' chi'}${it.date?' · '+it.date.split('-').reverse().join('/'):''}</span></div><div class="amt">${fmt(it.total)}<span>${it.mode=='pay'?'đã chuyển':''}</span></div></div>`).join('')||'<div class="hint">Không có dữ liệu.</div>')+
+  $('mb').innerHTML=(its.map(it=>`<div class="it" style="--c:${it.mode=='pay'?'var(--mint)':it.payer?'var(--b)':'var(--a)'}"><div class="m" style="cursor:default"><b>${esc(it.name||'(chưa đặt tên)')}</b><span>${it.mode=='pay'?esc(x.names[it.payer])+' → '+esc(x.names[1-it.payer]):esc(x.names[it.payer])+' chi'}${it.date?' · '+it.date.split('-').reverse().join('/'):''}</span></div><div class="amt">${fmt(it.total)}<span>${it.mode=='pay'?'đã chuyển':''}</span></div></div>`).join('')||'<div class="hint">Không có dữ liệu.</div>')+
   '<div class="row" style="margin-top:10px"><button id="hs1">Chia sẻ</button><button class="g" id="hs2">Sao chép CSV</button></div>';
   $('hs1').onclick=()=>shareText(periodText(x.label,x.names,its,x.o));
   $('hs2').onclick=()=>copyText(csvText(its,x.names),'Đã sao chép CSV');
@@ -486,12 +513,12 @@ function renderChores(){const N=S.names,L=S.chores||[],today=isoD(),ini=i=>esc((
  const keep=$('cwho').value;$('cwho').innerHTML=N.map((n,i)=>`<option value="${i}">${esc(n)}</option>`).join('');$('cwho').value=keep||'0';
  $('tcnt').textContent=L.length?L.length+' việc':'';$('tcard').hidden=!L.length;
  const rows=L.map(c=>{const y=cyc(c,today);return{c,y,done:c.doneKey===y.start&&c.doneBy>=0,nx:(y.who+1)%2,per:c.every==1?'hôm nay':c.every==7?'tuần này':'2 tuần này'}});
- $('clist').innerHTML=rows.map(({c,y,done,nx,per})=>`<div class="cw"><div class="it" style="--c:${y.who?'var(--b)':'var(--a)'}"><span class="dot">${ini(y.who)}</span>
- <div class="m" style="cursor:default"><b>${esc(c.title)}</b><span>Đến lượt ${esc(N[y.who])} ${per} · lượt kế ${dmy(y.next)}: ${esc(N[nx])}</span><span class="cst">Đã làm: ${esc(N[0])} ${c.cnt[0]} · ${esc(N[1])} ${c.cnt[1]}</span></div>
+ $('clist').innerHTML=rows.map(({c,y,done,nx,per})=>`<div class="cw"><div class="it" style="--c:${y.who?'var(--b)':'var(--a)'}"><span class="dot chore-face">${ini(y.who)}</span>
+ <div class="m" style="cursor:default"><b>${esc(c.title)}</b><span><span class="cycle-tag">Đến lượt ${esc(N[y.who])} ${per}</span> · lượt kế ${dmy(y.next)}: ${esc(N[nx])}</span><span class="cst">Đã làm: ${esc(N[0])} ${c.cnt[0]} · ${esc(N[1])} ${c.cnt[1]}</span></div>
  <button class="${done?'g':''}" onclick="choreDone(${c.id},${done?-1:y.who},'${y.start}')">${done?'Đã xong':'Xong'}</button><button class="x" onclick="choreDel(${c.id})">✕</button></div>
  <div class="ca"><button class="g" onclick="choreDone(${c.id},${nx},'${y.start}')">${esc(N[nx])} làm thay</button><button class="g" onclick="choreSwap(${c.id})">Đổi lượt</button></div></div>`).join('')
- ||'<div class="empty">Chưa có việc nào.<br>Thêm việc ở bên dưới để chia lượt.</div>';
- $('tlist').innerHTML=rows.map(({c,y,done,per})=>`<div class="it" style="--c:${y.who?'var(--b)':'var(--a)'};cursor:pointer" onclick="go('truc')"><span class="dot">${ini(y.who)}</span><div class="m"><b>${esc(c.title)}</b><span>Đến lượt ${esc(N[y.who])} ${per}</span></div><div class="amt" style="font-size:13px">${done?'Đã xong':'Chưa làm'}</div></div>`).join('')}
+ ||'<div class="empty"><b>Chưa có việc trực nhật</b>Thêm việc ở bên dưới để hai người luân phiên.</div>';
+ $('tlist').innerHTML=rows.map(({c,y,done,per})=>`<div class="it" style="--c:${y.who?'var(--b)':'var(--a)'};cursor:pointer" onclick="go('truc')"><span class="dot chore-face">${ini(y.who)}</span><div class="m"><b>${esc(c.title)}</b><span>Đến lượt ${esc(N[y.who])} ${per}</span></div><div class="amt" style="font-size:13px">${done?'Đã xong':'Chưa làm'}</div></div>`).join('')}
 function choreDone(id,by,key){const c=(S.chores||[]).find(x=>x.id==id);if(!c)return;
  if(c.doneKey===key&&c.doneBy>=0)c.cnt[c.doneBy]=Math.max(0,c.cnt[c.doneBy]-1);
  if(by>=0){c.doneKey=key;c.doneBy=by;c.cnt[by]++}else{c.doneKey='';c.doneBy=-1}
@@ -514,12 +541,13 @@ function calc(){const owe=[0,0];S.items.forEach(it=>owe[1-it.payer]+=share(it));
 function render(){
  const N=S.names,o=calc(),net=o[1]-o[0],from=net>0?1:0,to=1-from;
  const E=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])),ini=i=>E((N[i]||'?').trim().split(' ').pop()[0]),tot=o[0]+o[1],p0=tot?o[0]/tot*100:50;
- $('hero').innerHTML=`<div class="hk">Kỳ ${E(S.month||'-')} · ${S.items.length} khoản</div>`+
- (Math.abs(net)<1?`<div class="big">Hoà vốn</div><div class="sub">Không ai nợ ai</div>`:
+ $('hero').innerHTML=`<div class="hero-top"><span class="hk">Kỳ ${E(S.month||'-')} · ${S.items.length} khoản</span><span class="status-chip ${Math.abs(net)<1?'ok':'warn'}">${Math.abs(net)<1?'Đã hoà vốn':'Đang nợ'}</span></div>`+
+ (Math.abs(net)<1?`<div class="sub">Hai bên đã cân bằng</div><div class="big">Hoà vốn</div>`:
  `<div class="sub">Cần chuyển</div><div class="big">${fmt(Math.abs(net))}</div><div class="flow"><span class="av">${ini(from)}</span><b>${E(N[from])}</b><i class="ar"></i><b>${E(N[to])}</b><span class="av">${ini(to)}</span></div>`)+
- `<div class="bar"><i style="width:${p0}%"></i></div><div class="stat"><div><small>${E(N[0])} phải trả</small><b>${fmt(o[0])}</b></div><div><small>${E(N[1])} phải trả</small><b>${fmt(o[1])}</b></div></div><div class="hb">${Math.abs(net)>=1?'<button class="w1" id="hpay">Ghi đã chuyển</button>':''}<button id="hclose">Chốt kỳ</button></div>`;
+ `<div class="bar"><i style="width:${p0}%"></i></div><div class="split-row"><span>${E(N[0])} · ${p0.toFixed(0)}%</span><span>${(100-p0).toFixed(0)}% · ${E(N[1])}</span></div><div class="stat"><div><small>${E(N[0])} phải trả</small><b>${fmt(o[0])}</b></div><div><small>${E(N[1])} phải trả</small><b>${fmt(o[1])}</b></div></div><div class="hb">${Math.abs(net)>=1?'<button class="w1" id="hpay">Ghi đã chuyển</button>':''}<button id="hclose">Chốt kỳ</button></div>`;
  $('cnt').textContent=S.items.length+' khoản';
- heroAnim(Math.abs(net),o);
+ if(!heroRevealed){heroRevealed=true;$('hero').classList.add('reveal')}
+  heroAnim(Math.abs(net),o);
  const pv=$('payer').value;$('payer').innerHTML=N.map((n,i)=>`<option value="${i}">${E(n)}</option>`).join('');
  $('payer').value=pv||0;
  const mt={equal:'Chia đều',pct:'Theo %',fixed:'Số cụ thể',full:'Chia hết',none:'Tự chịu',pay:'Thanh toán'};
@@ -528,11 +556,11 @@ function render(){
  const L=S.items.filter(it=>!q||norm(it.name+' '+it.note+' '+N[it.payer]).includes(q)).sort((a,b)=>dk(b).localeCompare(dk(a))||b.id-a.id);
  let html='',cl=null,sum=0,buf='';const fl=()=>{if(cl!==null)html+=`<div class="gh"><b>${cl}</b><span>${fmt(sum)}</span></div>`+buf;buf='';sum=0};
  L.forEach(it=>{const k=dk(it),lab=k==today?'Hôm nay':k==yest?'Hôm qua':k?k.split('-').reverse().join('/'):'Không có ngày';if(lab!==cl){fl();cl=lab}sum+=+it.total||0;
-  buf+=`<div class="it${shown.has(it.id)?'':' new'}" data-id="${it.id}" style="--c:${it.payer?'var(--b)':'var(--a)'}"><span class="dot">${ini(it.payer)}</span>
- <div class="m"${it.mode=='pay'?'':` onclick="edit(${it.id})"`}><b>${E(it.name||'(chưa đặt tên)')}</b><span>${it.mode=='pay'?E(N[it.payer])+' → '+E(N[1-it.payer]):E(N[it.payer])+' chi'}${it.note?' · '+E(it.note):''}</span><em class="pill">${mt[it.mode]}${it.mode=='pct'?' '+(+it.val||0)+'%':''}</em></div>
+  buf+=`<div class="it${shown.has(it.id)?'':' new'}" data-id="${it.id}" style="--c:${it.mode=='pay'?'var(--mint)':it.payer?'var(--b)':'var(--a)'}"><span class="dot">${ini(it.payer)}</span>
+ <div class="m"${it.mode=='pay'?'':` onclick="edit(${it.id})"`}><b>${E(it.name||'(chưa đặt tên)')}</b><span>${it.mode=='pay'?'<span class="tx-dir">'+E(N[it.payer])+' → '+E(N[1-it.payer])+'</span>':E(N[it.payer])+' chi'}${it.note?' · '+E(it.note):''}</span><em class="pill">${mt[it.mode]}${it.mode=='pct'?' '+(+it.val||0)+'%':''}</em></div>
  <div class="amt">${fmt(it.total)}<span>${it.mode=='pay'?'đã chuyển':E(N[1-it.payer])+' nợ '+fmt(share(it))}</span></div>
  <button class="x" onclick="del(${it.id})">✕</button></div>`});fl();
- $('list').innerHTML=html||(S.items.length?'<div class="empty">Không tìm thấy khoản nào.</div>':'<div class="empty">Chưa có khoản chi nào.<br>Bấm nút <b>+ Thêm khoản chi</b> để bắt đầu.</div>');
+ $('list').innerHTML=html||(S.items.length?'<div class="empty"><b>Không tìm thấy khoản nào</b>Thử sửa từ khoá tìm kiếm.</div>':'<div class="empty"><b>Chưa có khoản chi nào</b>Bấm nút này để ghi khoản đầu tiên.<br><button class="btn-s" onclick="document.getElementById(\'fab\').click()">+ Thêm khoản chi</button></div>');
  L.forEach(it=>shown.add(it.id));
  $('cnt').textContent=q?L.length+'/'+S.items.length+' khoản':S.items.length+' khoản';
  recent();renderHist();rrender();renderChores();preview();renderStats()}
@@ -545,7 +573,7 @@ function add(){const c=cur();if(!c.total){$('total').focus();$('prev').textConte
  let it;if(editing){it=S.items.find(x=>x.id==editing);Object.assign(it,c)}else{it={id:Date.now(),...c};S.items.push(it)}
  sync('upsert',{item:it});
  $('payer').dataset.v=c.payer;clear();save();render();closeSheet();if(navigator.vibrate)navigator.vibrate(12);toast(msg)}
-function clear(){editing=null;['name','total','val','note'].forEach(i=>$(i).value='');$('mode').value='equal';$('save').textContent='Thêm';$('ft').textContent='Thêm khoản chi';$('cancel').hidden=true;$('quick').style.display='';$('qhint').textContent='';vis()}
+function clear(){editing=null;['name','total','val','note'].forEach(i=>$(i).value='');$('mode').value='equal';$('save').textContent='Thêm';$('ft').textContent='Thêm khoản chi';$('cancel').hidden=true;$('quick').style.display='';$('quick').querySelectorAll('button').forEach(b=>b.classList.remove('on'));$('qhint').textContent='';vis()}
 function edit(id){const it=S.items.find(x=>x.id==id);editing=id;
  $('name').value=it.name;$('total').value=it.total;$('mode').value=it.mode;$('val').value=it.val||'';$('date').value=it.date;$('note').value=it.note;
  $('payer').value=it.payer;$('quick').style.display='none';$('qhint').textContent='';vis();$('save').textContent='Lưu';$('ft').textContent='Sửa khoản chi';$('cancel').hidden=false;preview();openSheet()}
@@ -576,6 +604,7 @@ function quickFill(name){
   $('qhint').textContent='Lần trước '+fmt(last.total)+(how?' · '+how:'')+(L.length>1?' · TB 3 lần '+fmt(avg):'')+' — sửa số tiền nếu khác';
  }else{$('mode').value='equal';$('val').value='';$('total').value='';$('qhint').textContent='Chưa có khoản "'+name+'" — nhập số tiền';$('total').focus()}
  vis();preview();
+  $('quick').querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.q===name));
 }
 // ---- Thống kê ----
 function renderStats(){
@@ -584,7 +613,7 @@ function renderStats(){
  const has=rows.some(r=>r.total>0);$('scard').hidden=!has;if(!has)return;
  const max=Math.max(1,...rows.map(r=>r.total)),prev=H[0]?+H[0].total||0:0,delta=(curTotal>0&&prev>0)?(curTotal-prev)/prev*100:0;
  const avg=rows.reduce((s,r)=>s+r.total,0)/rows.length,top=cur.slice().sort((a,b)=>(+b.total||0)-(+a.total||0)).slice(0,3);
- $('slist').innerHTML=rows.map(r=>`<div style="display:flex;align-items:center;gap:8px;margin:6px 0"><span style="flex:0 0 86px;font-size:12px;color:var(--mut);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(r.label)}</span><span style="flex:1;height:9px;border-radius:99px;background:var(--ln);overflow:hidden"><i style="display:block;height:100%;border-radius:99px;width:${(r.total/max*100).toFixed(1)}%;background:${r.cur?'linear-gradient(90deg,var(--btn1),var(--b))':'var(--a)'}"></i></span><b style="font-size:12px;white-space:nowrap">${fmt(r.total)}</b></div>`).join('')
+ $('slist').innerHTML=rows.map(r=>`<div class="stat-row"><span class="stat-label">${esc(r.label)}</span><span class="stat-track"><i class="stat-fill${r.cur?' cur':''}" style="width:${(r.total/max*100).toFixed(1)}%"></i></span><b class="stat-amount">${fmt(r.total)}</b></div>`).join('')
   +(Math.abs(delta)>=1?`<div class="hint" style="margin-top:4px">Kỳ này ${delta>0?'tăng':'giảm'} <b>${Math.abs(delta).toFixed(0)}%</b> so với kỳ trước</div>`:'')
   +(top.length?`<div class="hint" style="margin-top:4px">Tốn nhất kỳ này: ${top.map(x=>esc(x.name||'?')+' '+fmt(x.total)).join(' · ')}</div>`:'')
   +`<div class="hint" style="margin-top:4px">Trung bình mỗi người/kỳ: <b>${fmt(avg/2)}</b></div>`;
@@ -703,7 +732,7 @@ const sig=x=>[x.name,x.total,x.payer,x.mode,x.val,x.date,x.note].join('|');
 function diff(a,b){const m=new Map(a.map(x=>[String(x.id),sig(x)])),ids=new Set(b.map(x=>String(x.id)));
  const add=b.filter(x=>!m.has(String(x.id))),chg=b.filter(x=>m.has(String(x.id))&&m.get(String(x.id))!==sig(x)),del=a.filter(x=>!ids.has(String(x.id))).length;
  return [add.length&&'Khoản mới: '+add.slice(0,2).map(x=>x.name+' '+fmt(x.total)).join(', ')+(add.length>2?' và '+(add.length-2)+' khoản khác':''),chg.length&&'Sửa '+chg.length+' khoản',del&&'Xoá '+del+' khoản'].filter(Boolean).join('. ')}
-function toast(t,act){const e=$('toast');e.textContent=t;e.style.display='block';
+function toast(t,act){const e=$('toast');e.textContent=t;e.style.display='block';e.setAttribute('role','status');e.setAttribute('aria-live','polite');
  if(act){const b=document.createElement('button');b.className='ta';b.textContent=act.label;b.onclick=()=>{act.fn();e.style.display='none'};e.appendChild(b)}
  clearTimeout(e._t);e._t=setTimeout(()=>e.style.display='none',act?6000:5000)}
 function show(body){const o={body,icon:'icons/icon-192.png',tag:'ttt'};
@@ -762,7 +791,7 @@ $('inv').onclick=async()=>{let r;try{r=await call('invite',{});if(r.error)throw 
  try{await navigator.clipboard.writeText(text);toast('Đã sao chép lời mời')}catch(e){}};
 $('rc').onclick=async()=>{if(!cfg.room)return;try{await navigator.clipboard.writeText(cfg.room);toast('Đã sao chép mã phòng')}catch(e){toast(cfg.room)}};
 // ---- Phiên bản: hiển thị + kiểm tra bản mới trên GitHub Pages ----
-const APP_V='ttt-v32',APP_DATE='19/11/2026',vNum=s=>+((String(s).match(/\d+/)||[0])[0]),vShow=()=>{$('vcur').textContent=APP_V.replace('ttt-','')+' · '+APP_DATE};
+const APP_V='ttt-v33',APP_DATE='28/11/2026',vNum=s=>+((String(s).match(/\d+/)||[0])[0]),vShow=()=>{$('vcur').textContent=APP_V.replace('ttt-','')+' · '+APP_DATE};
 let vLast=0;
 async function checkVer(auto){
  if(auto&&Date.now()-vLast<3e5)return;vLast=Date.now();
@@ -770,9 +799,9 @@ async function checkVer(auto){
  try{
   const t=await (await fetch('sw.js?cb='+Date.now(),{cache:'no-store'})).text(),
    m=t.match(/const V='(ttt-v\d+)'/);if(!m)throw 0;
-  if(vNum(m[1])>vNum(APP_V)){i.style.color='#00b894';i.innerHTML='Có bản mới <b>'+esc(m[1])+'</b>. Bấm Cập nhật ngay để tải.';$('vupd').hidden=false}
-  else{i.style.color='#00b894';i.textContent='Đang dùng bản mới nhất ('+APP_V+', '+APP_DATE+').'}
- }catch(e){i.style.color='#e17055';i.textContent='Không kiểm tra được — kiểm tra mạng rồi thử lại.'}
+  if(vNum(m[1])>vNum(APP_V)){i.style.color='var(--mint)';i.innerHTML='Có bản mới <b>'+esc(m[1])+'</b>. Bấm Cập nhật ngay để tải.';$('vupd').hidden=false}
+  else{i.style.color='var(--mint)';i.textContent='Đang dùng bản mới nhất ('+APP_V+', '+APP_DATE+').'}
+ }catch(e){i.style.color='var(--rose)';i.textContent='Không kiểm tra được — kiểm tra mạng rồi thử lại.'}
  finally{b.disabled=false;b.textContent=old}
 }
 $('vcheck').onclick=()=>checkVer(false);
@@ -790,17 +819,17 @@ $('diagb').onclick=async()=>{const i=$('diag'),b=$('diagb');b.disabled=true;i.st
   if(!h.trigger)bad.push('chưa có lịch tự động (chạy hàm taoBoHen trong Apps Script)');
   if(!h.sa)bad.push('thiếu Script property SA cho thông báo đẩy');
   if(!h.tokens)bad.push('chưa có máy nào bật thông báo');
-  i.style.color=bad.length?'#e17055':'#00b894';
-  i.textContent=bad.length?('Cần sửa: '+bad.join('; ')+'.'):('Máy chủ đã bật nhắc hẹn, có '+h.tokens+' máy nhận thông báo.');
- }catch(e){i.style.color='#e17055';i.textContent='Không kiểm tra được: '+e.message}
+  i.style.color=bad.length?'var(--rose)':'var(--mint)';
+  i.innerHTML='<span class="dot-status'+(bad.length?' bad':'')+'"></span>'+(bad.length?('Cần sửa: '+bad.join('; ')+'.'):('Máy chủ đã bật nhắc hẹn, có '+h.tokens+' máy nhận thông báo.'));
+ }catch(e){i.style.color='var(--rose)';i.textContent='Không kiểm tra được: '+e.message}
  finally{b.disabled=false}};
 $('testb').onclick=async()=>{const i=$('diag'),b=$('testb');b.disabled=true;i.style.color='';i.textContent='Đang gửi thử…';
  try{const r=await call('testpush',{},60000);if(r.error)throw new Error(r.error);
   const n=(r.test&&r.test.sent)||0;
-  i.style.color=n?'#00b894':'#e17055';
-  i.textContent=n?('Đã gửi thử tới '+n+' máy (gồm cả máy này nếu đã bật thông báo).'):'Chưa có máy nào bật thông báo nên không gửi được.';
+  i.style.color=n?'var(--mint)':'var(--rose)';
+  i.innerHTML='<span class="dot-status'+(n?'':' bad')+'"></span>'+(n?('Đã gửi thử tới '+n+' máy (gồm cả máy này nếu đã bật thông báo).'):'Chưa có máy nào bật thông báo nên không gửi được.');
   if(n)toast('Đã gửi thử thông báo');
- }catch(e){i.style.color='#e17055';i.textContent='Gửi thử thất bại: '+e.message}
+ }catch(e){i.style.color='var(--rose)';i.textContent='Gửi thử thất bại: '+e.message}
  finally{b.disabled=false}};
 $('leave').onclick=async()=>{if(!confirm('Rời phòng? Dữ liệu trên máy này sẽ bị xoá, phòng vẫn còn cho người khác.'))return;
  try{await call('leave',{})}catch(e){}
