@@ -1,5 +1,11 @@
-const V='ttt-v33';
-const FILES=['./','./index.html','./manifest.webmanifest','./icons/icon-192.png','./icons/icon-512.png','./icons/maskable-512.png'];
+const V='ttt-v34';
+const FILES=['./','./index.html','./manifest.webmanifest','./icons/icon-192.png','./icons/icon-512.png','./icons/maskable-512.png',
+ './fonts/icielbc-cubano.woff2',
+ './fonts/bevietnampro-400-vi.woff2','./fonts/bevietnampro-400-la.woff2',
+ './fonts/bevietnampro-500-vi.woff2','./fonts/bevietnampro-500-la.woff2',
+ './fonts/bevietnampro-600-vi.woff2','./fonts/bevietnampro-600-la.woff2',
+ './fonts/bevietnampro-700-vi.woff2','./fonts/bevietnampro-700-la.woff2',
+ './fonts/bevietnampro-800-vi.woff2','./fonts/bevietnampro-800-la.woff2'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(V).then(c=>c.addAll(FILES)));self.skipWaiting()});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(x=>x!==V).map(x=>caches.delete(x)))));self.clients.claim()});
 self.addEventListener('fetch',e=>{
